@@ -1,0 +1,7 @@
+# Tiny config used by the automated smoke test (seconds on any CPU).
+model: {name: featherlm-smoke, backend: feather, vocab_size: 512, d_model: 64, n_layers: 3, n_heads: 4,
+        n_kv_heads: 2, max_seq_len: 64, attn_every: 3, local_window: 16}
+data: {path: data/synthetic, format: bin, seq_len: 64}
+training: {batch_size: 8, grad_accum: 1, max_steps: 150, lr: 3.0e-3, warmup_steps: 10, eval_interval: 50,
+           eval_batches: 5, log_interval: 25, save_interval: 50, memory_budget_mb: 2000}
+output_dir: runs/smoke

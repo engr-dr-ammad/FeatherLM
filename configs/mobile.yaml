@@ -1,0 +1,18 @@
+# FeatherLM Mobile (~200M params): target for quantized edge inference. Train on a 32 GB+ machine or cloud VM.
+model:
+  name: featherlm-mobile
+  backend: feather
+  vocab_size: 32768
+  d_model: 1024
+  n_layers: 16
+  n_heads: 16
+  n_kv_heads: 4
+  max_seq_len: 1024
+  attn_every: 4
+  local_window: 256
+  embed_dim: 512            # factorized embeddings reduce the 32k-vocab table
+  gradient_checkpointing: true
+data: {path: data/mycorpus, format: bin, seq_len: 1024}
+training: {batch_size: 4, grad_accum: 16, max_steps: 100000, lr: 3.0e-4, warmup_steps: 2000, eval_interval: 1000,
+           save_interval: 1000, memory_budget_mb: 24000, optimizer: adamw}
+output_dir: runs/featherlm-mobile

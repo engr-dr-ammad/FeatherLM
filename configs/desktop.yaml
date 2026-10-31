@@ -1,0 +1,18 @@
+# FeatherLM Desktop (~0.7B params): research scale. Requires a GPU or a large cloud VM; do not train on a laptop.
+model:
+  name: featherlm-desktop
+  backend: feather
+  vocab_size: 32768
+  d_model: 1792
+  n_layers: 18
+  n_heads: 28
+  n_kv_heads: 4
+  max_seq_len: 2048
+  attn_every: 3
+  local_window: 512
+  embed_dim: 768
+  gradient_checkpointing: true
+data: {path: data/mycorpus, format: bin, seq_len: 2048}
+training: {batch_size: 2, grad_accum: 64, max_steps: 200000, lr: 2.0e-4, warmup_steps: 2000, eval_interval: 2000,
+           save_interval: 2000, memory_budget_mb: 60000, precision: bf16, optimizer: adafactor}
+output_dir: runs/featherlm-desktop

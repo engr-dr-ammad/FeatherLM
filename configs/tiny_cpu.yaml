@@ -1,0 +1,17 @@
+# FeatherLM Tiny (~60M params). Needs ~8 GB RAM; slow on CPU. Not trained in the initial release.
+model:
+  name: featherlm-tiny
+  backend: feather
+  vocab_size: 16384
+  d_model: 640
+  n_layers: 12
+  n_heads: 10
+  n_kv_heads: 2
+  max_seq_len: 512
+  attn_every: 4
+  local_window: 128
+  gradient_checkpointing: true
+data: {path: data/mycorpus, format: bin, seq_len: 512}
+training: {batch_size: 4, grad_accum: 8, max_steps: 20000, lr: 6.0e-4, warmup_steps: 500, eval_interval: 500,
+           save_interval: 500, memory_budget_mb: 6000, optimizer: adamw}
+output_dir: runs/featherlm-tiny

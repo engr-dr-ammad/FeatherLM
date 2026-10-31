@@ -1,0 +1,42 @@
+# FeatherLM Nano: experimental Feather core, CPU-only, conservative memory use.
+# Fits a 4 GB machine (measured peak RSS is reported in runs/<name>/summary.json).
+model:
+  name: featherlm-nano-transformer
+  backend: transformer
+  vocab_size: 8192
+  d_model: 384
+  n_layers: 6
+  n_heads: 6
+  n_kv_heads: 2
+  max_seq_len: 256
+  attn_every: 3             # layers 3 and 6 use sliding-window attention
+  local_window: 64
+  n_unique_blocks: 0        # >0 shares weights across depth
+  tie_embeddings: true
+  dropout: 0.1
+  gradient_checkpointing: false
+data:
+  path: data/shakespeare
+  format: bin
+  seq_len: 256
+training:
+  seed: 1337
+  batch_size: 8
+  grad_accum: 2
+  max_steps: 1200
+  lr: 1.0e-3
+  warmup_steps: 100
+  min_lr_ratio: 0.1
+  weight_decay: 0.1
+  grad_clip: 1.0
+  optimizer: adamw
+  precision: fp32
+  eval_interval: 100
+  eval_batches: 20
+  log_interval: 20
+  save_interval: 200
+  early_stopping_patience: 3
+  threads: 0
+  memory_budget_mb: 3000
+  reserve_mb: 1024
+output_dir: runs/featherlm-nano-transformer

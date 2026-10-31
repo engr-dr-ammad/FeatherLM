@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+# Data, models and training outputs (large; reproduce with the scripts)
+data/*/
+!data/README.md
+runs/
+models/*
+!models/README.md
+*.safetensors
+*.onnx
+*.pt
+# Local state
+*.db
+*.sqlite
+.env
+# Frontend
+frontend/node_modules/
+frontend/dist/
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
