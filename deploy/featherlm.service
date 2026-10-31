@@ -1,0 +1,20 @@
+# systemd unit for running the API without Docker (Method A on a server).
+# sudo cp deploy/featherlm.service /etc/systemd/system/ && sudo systemctl enable --now featherlm
+[Unit]
+Description=FeatherLM API
+After=network.target
+
+[Service]
+User=featherlm
+WorkingDirectory=/opt/featherlm
+EnvironmentFile=/opt/featherlm/.env
+ExecStart=/opt/featherlm/.venv/bin/uvicorn api.main:app --host 127.0.0.1 --port 8000 --proxy-headers
+Restart=on-failure
+TimeoutStopSec=30
+MemoryMax=4G
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/featherlm/runs /opt/featherlm/models /opt/featherlm/featherlm.db
+
+[Install]
+WantedBy=multi-user.target

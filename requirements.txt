@@ -1,0 +1,16 @@
+# Runtime dependencies (install PyTorch first; see README for the CPU-only wheel)
+torch>=2.4
+numpy>=1.26
+pyyaml>=6.0
+safetensors>=0.4
+psutil>=5.9
+fastapi>=0.115
+uvicorn>=0.30
+pydantic>=2.6
+python-multipart>=0.0.9
+# Export / validation
+onnx>=1.16
+onnxruntime>=1.18
+onnxscript>=0.1
+# Benchmark plots
+matplotlib>=3.8

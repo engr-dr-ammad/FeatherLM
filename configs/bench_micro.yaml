@@ -1,0 +1,19 @@
+# Matched-budget architecture comparison (python -m featherlm.benchmarks.benchmark_quality --spec configs/bench_micro.yaml)
+# Same data, tokenizer, seq_len, batch, steps (token budget), optimizer, precision and seeds for every architecture.
+runs_dir: runs/bench
+seeds: [0, 1, 2]
+base:
+  model: {vocab_size: 8192, d_model: 192, n_layers: 6, n_heads: 6, n_kv_heads: 2, max_seq_len: 128, dropout: 0.1}
+  data: {path: data/shakespeare, format: bin, seq_len: 128}
+  training: {batch_size: 16, grad_accum: 1, max_steps: 300, lr: 2.0e-3, warmup_steps: 30, min_lr_ratio: 0.1,
+             weight_decay: 0.1, grad_clip: 1.0, optimizer: adamw, precision: fp32, eval_interval: 50,
+             eval_batches: 16, log_interval: 25, save_interval: 1000, memory_budget_mb: 3000}
+architectures:
+  transformer:            # baseline: GQA + RoPE + RMSNorm + SwiGLU; d_ff tuned to equal the Feather param count
+    {name: micro-transformer, backend: transformer, d_ff: 560}
+  feather_hybrid:         # gated recurrence + sliding-window attention every 3rd layer
+    {name: micro-feather, backend: feather, attn_every: 3, local_window: 64}
+  feather_recurrent:      # pure gated recurrence (Hawk-like), a second efficient architecture
+    {name: micro-feather-rec, backend: feather, attn_every: 0}
+  feather_shared:         # hybrid with depth-wise weight sharing (2 unique blocks per kind), ~21% fewer params
+    {name: micro-feather-shared, backend: feather, attn_every: 3, local_window: 64, n_unique_blocks: 2}

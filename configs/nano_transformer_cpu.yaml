@@ -3,6 +3,7 @@
 model:
   name: featherlm-nano-transformer
   backend: transformer
+  d_ff: 1118                # matches FeatherLM Nano parameter count (13.24M)
   vocab_size: 8192
   d_model: 384
   n_layers: 6

@@ -1,0 +1,11 @@
+.git
+**/__pycache__
+.pytest_cache
+runs
+models
+data
+frontend/node_modules
+frontend/dist
+*.db
+.env
+mobile

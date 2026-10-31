@@ -1,0 +1,40 @@
+# Production: inference only, behind an HTTPS reverse proxy.
+#   docker compose -f docker-compose.prod.yml up -d
+# - Training/admin endpoints are disabled (FEATHERLM_ENABLE_TRAINING_API=false).
+# - FEATHERLM_API_KEY is required for every inference request.
+# - The container is only published on 127.0.0.1; nginx (deploy/nginx.conf) terminates TLS.
+services:
+  featherlm:
+    image: featherlm:cpu
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      FEATHERLM_ENABLE_TRAINING_API: "false"
+      FEATHERLM_API_KEY: ${FEATHERLM_API_KEY:?set FEATHERLM_API_KEY in .env}
+      FEATHERLM_DEFAULT_MODEL: ${FEATHERLM_DEFAULT_MODEL:-}
+      FEATHERLM_THREADS: ${FEATHERLM_THREADS:-0}
+      FEATHERLM_MAX_NEW_TOKENS: ${FEATHERLM_MAX_NEW_TOKENS:-256}
+      FEATHERLM_CORS_ORIGINS: ${FEATHERLM_CORS_ORIGINS:-}
+      FEATHERLM_LOG_LEVEL: INFO
+    volumes:
+      - featherlm-models:/data/models:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /data/runs
+      - /data/state
+    restart: always
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "5"}
+    deploy:
+      resources:
+        limits:
+          memory: ${FEATHERLM_MEM_LIMIT:-3g}
+          cpus: "${FEATHERLM_CPUS:-2}"
+
+volumes:
+  featherlm-models:
+    external: true

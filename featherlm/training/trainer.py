@@ -57,6 +57,7 @@ class TrainConfig:
     allow_over_budget: bool = False
     max_minutes: float = 0  # wall-clock limit; 0 disables
     resume: bool = True
+    device: str = "cpu"  # cpu | cuda | auto (cuda if available)
 
 
 @dataclass
@@ -206,6 +207,7 @@ class Trainer:
         model.eval()
         total, n = 0.0, 0
         for x, y in val.sequential_batches(self.tc.batch_size, self.tc.eval_batches):
+            x, y = x.to(self.device), y.to(self.device)
             with self._autocast():
                 _, loss, _ = model(x, y)
             total += loss.item()
@@ -213,9 +215,19 @@ class Trainer:
         model.train()
         return total / max(n, 1)
 
+    def _device(self) -> torch.device:
+        d = self.tc.device
+        if d == "auto":
+            d = "cuda" if torch.cuda.is_available() else "cpu"
+        if d == "cuda" and not torch.cuda.is_available():
+            raise RuntimeError("training.device=cuda but CUDA is not available")
+        if d not in ("cpu", "cuda"):
+            raise ValueError("training.device must be cpu, cuda or auto")
+        return torch.device(d)
+
     def _autocast(self):
         if self.tc.precision == "bf16":
-            return torch.autocast("cpu", dtype=torch.bfloat16)
+            return torch.autocast(self.device.type, dtype=torch.bfloat16)
         import contextlib
 
         return contextlib.nullcontext()
@@ -246,6 +258,7 @@ class Trainer:
         if tc.threads:
             torch.set_num_threads(tc.threads)
         self._seed(tc.seed)
+        self.device = self._device()
         model, tok, cfg = self._build()
         train, val = self._data(tok)
         n_params = model.num_params()
@@ -262,6 +275,7 @@ class Trainer:
                 f"estimated {est:.0f} MB exceeds budget {budget:.0f} MB. Reduce batch_size/seq_len, "
                 "enable model.gradient_checkpointing, use optimizer=adafactor, or set training.allow_over_budget=true")
 
+        model.to(self.device)
         opt = build_optimizer(model, tc.optimizer, tc.lr, tc.weight_decay)
         sched = build_scheduler(opt, tc.warmup_steps, tc.max_steps, tc.min_lr_ratio)
         rng = np.random.default_rng(tc.seed)
@@ -270,10 +284,10 @@ class Trainer:
         latest = self.out / "latest"
         if tc.resume and (latest / "trainer_state.json").exists():
             if self.is_lora:
-                adapter = load_file(str(latest / "lora_adapter.safetensors"))
+                adapter = load_file(str(latest / "lora_adapter.safetensors"), device=str(self.device))
                 model.load_state_dict(adapter, strict=False)
             else:
-                model.load_state_dict(load_file(str(latest / "model.safetensors")))
+                model.load_state_dict(load_file(str(latest / "model.safetensors"), device=str(self.device)))
             state = load_training_state(latest, opt, sched)
             if "np_rng" in state:
                 rng.bit_generator.state = state["np_rng"]
@@ -304,6 +318,7 @@ class Trainer:
                 loss_acc = 0.0
                 for _ in range(tc.grad_accum):
                     x, y = train.random_batch(tc.batch_size, rng)
+                    x, y = x.to(self.device, non_blocking=True), y.to(self.device, non_blocking=True)
                     with self._autocast():
                         _, loss, _ = model(x, y)
                     (loss / tc.grad_accum).backward()

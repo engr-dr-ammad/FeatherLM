@@ -1,0 +1,33 @@
+# Local CPU deployment: API + Studio on http://localhost:8000
+#   docker compose up -d --build
+# Training controls are enabled but only reachable with FEATHERLM_ADMIN_KEY (requests via the
+# Docker network are never treated as local). Set keys in .env (see .env.example).
+services:
+  featherlm:
+    build: .
+    image: featherlm:cpu
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      FEATHERLM_ENABLE_TRAINING_API: "true"
+      FEATHERLM_THREADS: ${FEATHERLM_THREADS:-0}
+    volumes:
+      - featherlm-models:/data/models
+      - featherlm-runs:/data/runs
+      - featherlm-datasets:/data/datasets
+      - featherlm-state:/data/state
+    restart: unless-stopped
+    stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: ${FEATHERLM_MEM_LIMIT:-4g}
+
+volumes:
+  featherlm-models:
+  featherlm-runs:
+  featherlm-datasets:
+  featherlm-state:
