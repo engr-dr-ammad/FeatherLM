@@ -1,0 +1,5 @@
+arch,n_seeds,params,val_loss_mean,val_loss_std,val_ppl_mean,peak_train_rss_mb_mean,train_tokens_per_sec_mean,train_time_s_mean
+transformer,3,4100544,5.3885,0.046,218.87,1413.5667,3263.9,190.2
+feather_hybrid,3,4100544,5.3597,0.0358,212.66,1471.6667,3636.2333,170.9
+feather_recurrent,3,4183488,5.3446,0.0194,209.47,1477.3667,3705.0333,167.6
+feather_shared,3,3230400,5.376,0.0413,216.16,1463.9667,3593.9667,172.9

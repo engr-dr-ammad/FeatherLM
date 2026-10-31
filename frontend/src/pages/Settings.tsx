@@ -18,7 +18,7 @@ export default function SettingsPage() {
     get<S>("/settings").then(setS).catch((e) => setMsg(e.message));
     get<Record<string, number | string | boolean>>("/system").then(setSys).catch(() => {});
   };
-  useEffect(load, []);
+  useEffect(() => { load(); }, []);
 
   async function save() {
     if (!s) return;

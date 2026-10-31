@@ -92,6 +92,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     if settings.serve_frontend and (dist / "index.html").exists():
         app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
 
+        @app.get("/favicon.svg", include_in_schema=False)
+        async def favicon():
+            return FileResponse(dist / "favicon.svg", media_type="image/svg+xml")
+
         @app.get("/", include_in_schema=False)
         async def index():
             return FileResponse(dist / "index.html")

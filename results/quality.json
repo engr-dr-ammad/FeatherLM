@@ -1,0 +1,597 @@
+{
+  "system": {
+    "os": "Linux 6.18.44-fc-v185",
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cpu": "x86_64",
+    "cpu_count_logical": 2,
+    "torch_threads": 2,
+    "ram_total_mb": 8028,
+    "ram_available_mb": 6891,
+    "cuda": false
+  },
+  "rows": [
+    {
+      "arch": "transformer",
+      "seed": 0,
+      "params": 4100544,
+      "final_val_loss": 5.398134920332167,
+      "final_val_ppl": 220.99386044326795,
+      "best_val_loss": 5.398134920332167,
+      "last_train_loss": 4.8326,
+      "peak_train_rss_mb": 1412.1,
+      "train_tokens_per_sec": 3413.7,
+      "train_time_s": 181.7,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "transformer",
+      "seed": 1,
+      "params": 4100544,
+      "final_val_loss": 5.3383941650390625,
+      "final_val_ppl": 208.1781419917447,
+      "best_val_loss": 5.3383941650390625,
+      "last_train_loss": 4.7798,
+      "peak_train_rss_mb": 1410.7,
+      "train_tokens_per_sec": 3217.2,
+      "train_time_s": 192.7,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "transformer",
+      "seed": 2,
+      "params": 4100544,
+      "final_val_loss": 5.428853087955051,
+      "final_val_ppl": 227.88772830361572,
+      "best_val_loss": 5.428853087955051,
+      "last_train_loss": 4.7333,
+      "peak_train_rss_mb": 1417.9,
+      "train_tokens_per_sec": 3160.8,
+      "train_time_s": 196.2,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_hybrid",
+      "seed": 0,
+      "params": 4100544,
+      "final_val_loss": 5.377266459994846,
+      "final_val_ppl": 216.4298464361321,
+      "best_val_loss": 5.377266459994846,
+      "last_train_loss": 4.7858,
+      "peak_train_rss_mb": 1458.7,
+      "train_tokens_per_sec": 3645.8,
+      "train_time_s": 170.7,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_hybrid",
+      "seed": 1,
+      "params": 4100544,
+      "final_val_loss": 5.318494002024333,
+      "final_val_ppl": 204.07631193849886,
+      "best_val_loss": 5.318494002024333,
+      "last_train_loss": 4.8166,
+      "peak_train_rss_mb": 1454.3,
+      "train_tokens_per_sec": 3657.3,
+      "train_time_s": 169.7,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_hybrid",
+      "seed": 2,
+      "params": 4100544,
+      "final_val_loss": 5.383228407965766,
+      "final_val_ppl": 217.72404405587505,
+      "best_val_loss": 5.383228407965766,
+      "last_train_loss": 4.7146,
+      "peak_train_rss_mb": 1502.0,
+      "train_tokens_per_sec": 3605.6,
+      "train_time_s": 172.3,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_recurrent",
+      "seed": 0,
+      "params": 4183488,
+      "final_val_loss": 5.361246479882134,
+      "final_val_ppl": 212.99026914106994,
+      "best_val_loss": 5.361246479882134,
+      "last_train_loss": 4.7952,
+      "peak_train_rss_mb": 1461.2,
+      "train_tokens_per_sec": 3632.4,
+      "train_time_s": 170.9,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_recurrent",
+      "seed": 1,
+      "params": 4183488,
+      "final_val_loss": 5.323289076487224,
+      "final_val_ppl": 205.05722294152136,
+      "best_val_loss": 5.323289076487224,
+      "last_train_loss": 4.7953,
+      "peak_train_rss_mb": 1510.1,
+      "train_tokens_per_sec": 3738.4,
+      "train_time_s": 166.0,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_recurrent",
+      "seed": 2,
+      "params": 4183488,
+      "final_val_loss": 5.349366664886475,
+      "final_val_ppl": 210.4749544664216,
+      "best_val_loss": 5.349366664886475,
+      "last_train_loss": 4.6857,
+      "peak_train_rss_mb": 1460.8,
+      "train_tokens_per_sec": 3744.3,
+      "train_time_s": 165.9,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_shared",
+      "seed": 0,
+      "params": 3230400,
+      "final_val_loss": 5.420360300276014,
+      "final_val_ppl": 225.96052147537236,
+      "best_val_loss": 5.420360300276014,
+      "last_train_loss": 4.8124,
+      "peak_train_rss_mb": 1465.1,
+      "train_tokens_per_sec": 3685.5,
+      "train_time_s": 168.4,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_shared",
+      "seed": 1,
+      "params": 3230400,
+      "final_val_loss": 5.338581668006049,
+      "final_val_ppl": 208.21717967075585,
+      "best_val_loss": 5.338581668006049,
+      "last_train_loss": 4.761,
+      "peak_train_rss_mb": 1478.2,
+      "train_tokens_per_sec": 3608.2,
+      "train_time_s": 172.3,
+      "tokens_seen": 614400
+    },
+    {
+      "arch": "feather_shared",
+      "seed": 2,
+      "params": 3230400,
+      "final_val_loss": 5.369061787923177,
+      "final_val_ppl": 214.66137530307662,
+      "best_val_loss": 5.369061787923177,
+      "last_train_loss": 4.6876,
+      "peak_train_rss_mb": 1448.6,
+      "train_tokens_per_sec": 3488.2,
+      "train_time_s": 178.0,
+      "tokens_seen": 614400
+    }
+  ],
+  "summary": [
+    {
+      "arch": "transformer",
+      "n_seeds": 3,
+      "params": 4100544,
+      "val_loss_mean": 5.3885,
+      "val_loss_std": 0.046,
+      "val_ppl_mean": 218.87,
+      "peak_train_rss_mb_mean": 1413.5667,
+      "train_tokens_per_sec_mean": 3263.9,
+      "train_time_s_mean": 190.2
+    },
+    {
+      "arch": "feather_hybrid",
+      "n_seeds": 3,
+      "params": 4100544,
+      "val_loss_mean": 5.3597,
+      "val_loss_std": 0.0358,
+      "val_ppl_mean": 212.66,
+      "peak_train_rss_mb_mean": 1471.6667,
+      "train_tokens_per_sec_mean": 3636.2333,
+      "train_time_s_mean": 170.9
+    },
+    {
+      "arch": "feather_recurrent",
+      "n_seeds": 3,
+      "params": 4183488,
+      "val_loss_mean": 5.3446,
+      "val_loss_std": 0.0194,
+      "val_ppl_mean": 209.47,
+      "peak_train_rss_mb_mean": 1477.3667,
+      "train_tokens_per_sec_mean": 3705.0333,
+      "train_time_s_mean": 167.6
+    },
+    {
+      "arch": "feather_shared",
+      "n_seeds": 3,
+      "params": 3230400,
+      "val_loss_mean": 5.376,
+      "val_loss_std": 0.0413,
+      "val_ppl_mean": 216.16,
+      "peak_train_rss_mb_mean": 1463.9667,
+      "train_tokens_per_sec_mean": 3593.9667,
+      "train_time_s_mean": 172.9
+    }
+  ],
+  "curves": {
+    "transformer_seed0": [
+      [
+        50,
+        6.2330732345581055
+      ],
+      [
+        100,
+        5.8303722275627985
+      ],
+      [
+        150,
+        5.597212685479058
+      ],
+      [
+        200,
+        5.481382687886556
+      ],
+      [
+        250,
+        5.431624518500434
+      ],
+      [
+        300,
+        5.398134920332167
+      ]
+    ],
+    "transformer_seed1": [
+      [
+        50,
+        6.186372650994195
+      ],
+      [
+        100,
+        5.849308861626519
+      ],
+      [
+        150,
+        5.592184437645806
+      ],
+      [
+        200,
+        5.429152011871338
+      ],
+      [
+        250,
+        5.390300432840983
+      ],
+      [
+        300,
+        5.3383941650390625
+      ]
+    ],
+    "transformer_seed2": [
+      [
+        50,
+        6.150750848982069
+      ],
+      [
+        100,
+        5.858903196122911
+      ],
+      [
+        150,
+        5.642396767934163
+      ],
+      [
+        200,
+        5.547821150885688
+      ],
+      [
+        250,
+        5.459254264831543
+      ],
+      [
+        300,
+        5.428853087955051
+      ]
+    ],
+    "feather_hybrid_seed0": [
+      [
+        50,
+        6.110357390509711
+      ],
+      [
+        100,
+        5.834435145060222
+      ],
+      [
+        150,
+        5.513071484035915
+      ],
+      [
+        200,
+        5.437958240509033
+      ],
+      [
+        250,
+        5.4116183916727705
+      ],
+      [
+        300,
+        5.377266459994846
+      ]
+    ],
+    "feather_hybrid_seed1": [
+      [
+        50,
+        6.171063370174831
+      ],
+      [
+        100,
+        5.774643950992161
+      ],
+      [
+        150,
+        5.613871150546604
+      ],
+      [
+        200,
+        5.400882085164388
+      ],
+      [
+        250,
+        5.373510572645399
+      ],
+      [
+        300,
+        5.318494002024333
+      ]
+    ],
+    "feather_hybrid_seed2": [
+      [
+        50,
+        6.122024907006158
+      ],
+      [
+        100,
+        5.760326226552327
+      ],
+      [
+        150,
+        5.6493964195251465
+      ],
+      [
+        200,
+        5.488432142469618
+      ],
+      [
+        250,
+        5.417961120605469
+      ],
+      [
+        300,
+        5.383228407965766
+      ]
+    ],
+    "feather_recurrent_seed0": [
+      [
+        50,
+        6.202730072869195
+      ],
+      [
+        100,
+        5.7906928062438965
+      ],
+      [
+        150,
+        5.56694147321913
+      ],
+      [
+        200,
+        5.479741626315647
+      ],
+      [
+        250,
+        5.40539911058214
+      ],
+      [
+        300,
+        5.361246479882134
+      ]
+    ],
+    "feather_recurrent_seed1": [
+      [
+        50,
+        6.192696253458659
+      ],
+      [
+        100,
+        5.78906864590115
+      ],
+      [
+        150,
+        5.56170474158393
+      ],
+      [
+        200,
+        5.422772513495551
+      ],
+      [
+        250,
+        5.385611799028185
+      ],
+      [
+        300,
+        5.323289076487224
+      ]
+    ],
+    "feather_recurrent_seed2": [
+      [
+        50,
+        6.1569563547770185
+      ],
+      [
+        100,
+        5.830192883809407
+      ],
+      [
+        150,
+        5.6495992342631025
+      ],
+      [
+        200,
+        5.487501462300618
+      ],
+      [
+        250,
+        5.400654104020861
+      ],
+      [
+        300,
+        5.349366664886475
+      ]
+    ],
+    "feather_shared_seed0": [
+      [
+        50,
+        6.1690760188632545
+      ],
+      [
+        100,
+        5.798967520395915
+      ],
+      [
+        150,
+        5.616481198204888
+      ],
+      [
+        200,
+        5.499583085378011
+      ],
+      [
+        250,
+        5.470532523261176
+      ],
+      [
+        300,
+        5.420360300276014
+      ]
+    ],
+    "feather_shared_seed1": [
+      [
+        50,
+        6.134834395514594
+      ],
+      [
+        100,
+        5.743630197313097
+      ],
+      [
+        150,
+        5.55942275789049
+      ],
+      [
+        200,
+        5.41519996854994
+      ],
+      [
+        250,
+        5.373843722873264
+      ],
+      [
+        300,
+        5.338581668006049
+      ]
+    ],
+    "feather_shared_seed2": [
+      [
+        50,
+        6.161114003923204
+      ],
+      [
+        100,
+        5.759196705288357
+      ],
+      [
+        150,
+        5.579219500223796
+      ],
+      [
+        200,
+        5.4573302798801
+      ],
+      [
+        250,
+        5.407610363430447
+      ],
+      [
+        300,
+        5.369061787923177
+      ]
+    ]
+  },
+  "spec": {
+    "runs_dir": "runs/bench",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "base": {
+      "model": {
+        "vocab_size": 8192,
+        "d_model": 192,
+        "n_layers": 6,
+        "n_heads": 6,
+        "n_kv_heads": 2,
+        "max_seq_len": 128,
+        "dropout": 0.1
+      },
+      "data": {
+        "path": "data/shakespeare",
+        "format": "bin",
+        "seq_len": 128
+      },
+      "training": {
+        "batch_size": 16,
+        "grad_accum": 1,
+        "max_steps": 300,
+        "lr": 0.002,
+        "warmup_steps": 30,
+        "min_lr_ratio": 0.1,
+        "weight_decay": 0.1,
+        "grad_clip": 1.0,
+        "optimizer": "adamw",
+        "precision": "fp32",
+        "eval_interval": 50,
+        "eval_batches": 16,
+        "log_interval": 25,
+        "save_interval": 1000,
+        "memory_budget_mb": 3000
+      }
+    },
+    "architectures": {
+      "transformer": {
+        "name": "micro-transformer",
+        "backend": "transformer",
+        "d_ff": 560
+      },
+      "feather_hybrid": {
+        "name": "micro-feather",
+        "backend": "feather",
+        "attn_every": 3,
+        "local_window": 64
+      },
+      "feather_recurrent": {
+        "name": "micro-feather-rec",
+        "backend": "feather",
+        "attn_every": 0
+      },
+      "feather_shared": {
+        "name": "micro-feather-shared",
+        "backend": "feather",
+        "attn_every": 3,
+        "local_window": 64,
+        "n_unique_blocks": 2
+      }
+    }
+  }
+}

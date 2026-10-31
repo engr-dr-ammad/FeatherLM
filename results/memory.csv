@@ -1,0 +1,11 @@
+config,backend,params,mode,baseline_rss_mb,batch_size,seq_len,gradient_checkpointing,optimizer,optimizer_state_mb,peak_rss_mb,peak_over_baseline_mb,context,cache_mb
+configs/nano_cpu.yaml,feather,13239168,train,510.2,8,256,False,adamw,101.0,1912.6,1402.5,,
+configs/nano_cpu.yaml,feather,13239168,train,510.1,8,256,True,adamw,101.0,1255.5,745.4,,
+configs/nano_cpu.yaml,feather,13239168,infer,510.1,,,,,,583.5,73.4,256,0.146
+configs/nano_cpu.yaml,feather,13239168,infer,510.4,,,,,,583.7,73.3,1024,0.146
+configs/nano_cpu.yaml,feather,13239168,infer,510.2,,,,,,583.5,73.3,4096,0.146
+configs/nano_transformer_cpu.yaml,transformer,13237632,train,510.2,8,256,False,adamw,101.0,1701.1,1190.9,,
+configs/nano_transformer_cpu.yaml,transformer,13237632,train,510.3,8,256,True,adamw,101.0,1240.1,729.9,,
+configs/nano_transformer_cpu.yaml,transformer,13237632,infer,510.2,,,,,,577.9,67.7,256,1.5
+configs/nano_transformer_cpu.yaml,transformer,13237632,infer,510.4,,,,,,592.0,81.6,1024,6.0
+configs/nano_transformer_cpu.yaml,transformer,13237632,infer,510.1,,,,,,643.7,133.6,4096,24.0

@@ -36,7 +36,7 @@ def main() -> int:
         from featherlm.training.checkpoint import load_model
         base, tok, _ = load_model(rc.finetune.init_from)
         _, val = trainer._data(tok)
-        before = trainer.evaluate(base.train(), val)
+        before = trainer.evaluate(base.to(trainer.device).train(), val)
         del base
     except Exception as e:  # evaluation is informative only
         print(f"(pre-finetune evaluation skipped: {e})")

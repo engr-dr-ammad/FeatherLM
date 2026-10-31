@@ -1,0 +1,7 @@
+source,backend,params,threads,prompt_len,decode_tokens,ttft_ms,decode_tokens_per_sec
+configs/nano_cpu.yaml,feather,13239168,2,128,64,22.51,213.5
+configs/nano_cpu.yaml,feather,13239168,2,512,64,69.95,202.6
+configs/nano_cpu.yaml,feather,13239168,2,2048,64,397.18,188.8
+configs/nano_transformer_cpu.yaml,transformer,13237632,2,128,64,20.26,188.4
+configs/nano_transformer_cpu.yaml,transformer,13237632,2,512,64,69.33,171.5
+configs/nano_transformer_cpu.yaml,transformer,13237632,2,2048,64,311.66,117.7

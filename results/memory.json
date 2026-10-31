@@ -1,0 +1,138 @@
+{
+  "system": {
+    "os": "Linux 6.18.44-fc-v185",
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cpu": "x86_64",
+    "cpu_count_logical": 2,
+    "torch_threads": 2,
+    "ram_total_mb": 8028,
+    "ram_available_mb": 7131,
+    "cuda": false
+  },
+  "rows": [
+    {
+      "config": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "mode": "train",
+      "baseline_rss_mb": 510.2,
+      "batch_size": 8,
+      "seq_len": 256,
+      "gradient_checkpointing": false,
+      "optimizer": "adamw",
+      "optimizer_state_mb": 101.0,
+      "peak_rss_mb": 1912.6,
+      "peak_over_baseline_mb": 1402.5
+    },
+    {
+      "config": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "mode": "train",
+      "baseline_rss_mb": 510.1,
+      "batch_size": 8,
+      "seq_len": 256,
+      "gradient_checkpointing": true,
+      "optimizer": "adamw",
+      "optimizer_state_mb": 101.0,
+      "peak_rss_mb": 1255.5,
+      "peak_over_baseline_mb": 745.4
+    },
+    {
+      "config": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "mode": "infer",
+      "baseline_rss_mb": 510.1,
+      "context": 256,
+      "cache_mb": 0.146,
+      "peak_rss_mb": 583.5,
+      "peak_over_baseline_mb": 73.4
+    },
+    {
+      "config": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "mode": "infer",
+      "baseline_rss_mb": 510.4,
+      "context": 1024,
+      "cache_mb": 0.146,
+      "peak_rss_mb": 583.7,
+      "peak_over_baseline_mb": 73.3
+    },
+    {
+      "config": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "mode": "infer",
+      "baseline_rss_mb": 510.2,
+      "context": 4096,
+      "cache_mb": 0.146,
+      "peak_rss_mb": 583.5,
+      "peak_over_baseline_mb": 73.3
+    },
+    {
+      "config": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "mode": "train",
+      "baseline_rss_mb": 510.2,
+      "batch_size": 8,
+      "seq_len": 256,
+      "gradient_checkpointing": false,
+      "optimizer": "adamw",
+      "optimizer_state_mb": 101.0,
+      "peak_rss_mb": 1701.1,
+      "peak_over_baseline_mb": 1190.9
+    },
+    {
+      "config": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "mode": "train",
+      "baseline_rss_mb": 510.3,
+      "batch_size": 8,
+      "seq_len": 256,
+      "gradient_checkpointing": true,
+      "optimizer": "adamw",
+      "optimizer_state_mb": 101.0,
+      "peak_rss_mb": 1240.1,
+      "peak_over_baseline_mb": 729.9
+    },
+    {
+      "config": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "mode": "infer",
+      "baseline_rss_mb": 510.2,
+      "context": 256,
+      "cache_mb": 1.5,
+      "peak_rss_mb": 577.9,
+      "peak_over_baseline_mb": 67.7
+    },
+    {
+      "config": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "mode": "infer",
+      "baseline_rss_mb": 510.4,
+      "context": 1024,
+      "cache_mb": 6.0,
+      "peak_rss_mb": 592.0,
+      "peak_over_baseline_mb": 81.6
+    },
+    {
+      "config": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "mode": "infer",
+      "baseline_rss_mb": 510.1,
+      "context": 4096,
+      "cache_mb": 24.0,
+      "peak_rss_mb": 643.7,
+      "peak_over_baseline_mb": 133.6
+    }
+  ],
+  "note": "random weights; peak RSS measured in isolated processes"
+}

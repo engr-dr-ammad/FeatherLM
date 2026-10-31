@@ -31,7 +31,8 @@ positions. Each token re-runs the window, which is simple and portable but O(W) 
 windowed KV cache as graph inputs/outputs. The Feather backend's state is fixed-size, which
 makes this export straightforward compared with a growing Transformer KV cache.
 
-Size: Nano is 13.2M parameters, about 53 MB in FP32 ONNX. ONNX Runtime's own
+Size: Nano is 13.2M parameters; the FP32 ONNX file measured 64 MB (the exporter stores the tied
+embedding matrix twice, once per use; deduplicating it would save ~12 MB). ONNX Runtime's own
 INT8 dynamic quantization (`onnxruntime.quantization.quantize_dynamic`) is the expected next
 step for mobile size; the repository's INT8/INT4 PyTorch checkpoints are separate.
 

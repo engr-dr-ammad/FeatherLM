@@ -17,11 +17,12 @@ export default function Chat() {
     get<{ data: { featherlm: ModelInfo }[] }>("/v1/models").then((r) => {
       const ms = r.data.map((d) => d.featherlm);
       setModels(ms);
-      const pref = ms.find((m) => m.id.endsWith("/final")) ?? ms[0];
+      const pref = ms.find((m) => m.id.endsWith("/best")) ?? ms.find((m) => m.id.endsWith("/final")) ?? ms[0];
       if (pref) setModel(pref.id);
     }).catch(() => setModels([]));
   }, []);
-  useEffect(() => bottom.current?.scrollIntoView({ behavior: "smooth" }), [msgs]);
+  // Braces matter: newer browsers return a Promise from scrollIntoView, which React would treat as a cleanup.
+  useEffect(() => { bottom.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
   const info = models.find((m) => m.id === model);
   const chatMode = !!info?.capabilities.chat;
@@ -67,7 +68,7 @@ export default function Chat() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-      <section className="card flex min-h-[70vh] flex-col p-0">
+      <section className="card flex h-[calc(100vh-11rem)] min-h-[420px] flex-col p-0">
         <div className="flex flex-wrap items-center gap-2 border-b border-stone-200 p-3">
           <select value={model} onChange={(e) => setModel(e.target.value)} className="min-w-0 flex-1">
             {models.length === 0 && <option value="">No models found — train one first</option>}
@@ -110,7 +111,7 @@ export default function Chat() {
             : <button className="btn-primary self-end" onClick={send} disabled={!model || !input.trim()}>Send</button>}
         </div>
       </section>
-      <aside className="card h-fit space-y-3">
+      <aside className="card h-fit space-y-3 lg:sticky lg:top-20">
         <h3 className="text-sm font-semibold">Generation settings</h3>
         <div className="grid grid-cols-2 gap-3">
           {num("max_tokens", 1, 1, 4096)}

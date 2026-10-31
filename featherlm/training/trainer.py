@@ -133,6 +133,7 @@ class Trainer:
         self.status_path = self.out / "status.json"
         self.metrics = JsonlLogger(self.out / "metrics.jsonl")
         self.is_lora = False
+        self.device = self._device()
 
     # ------------------------------------------------------------------
     def _handle_signal(self, signum, frame) -> None:
@@ -258,7 +259,6 @@ class Trainer:
         if tc.threads:
             torch.set_num_threads(tc.threads)
         self._seed(tc.seed)
-        self.device = self._device()
         model, tok, cfg = self._build()
         train, val = self._data(tok)
         n_params = model.num_params()

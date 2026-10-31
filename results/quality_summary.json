@@ -1,0 +1,59 @@
+{
+  "system": {
+    "os": "Linux 6.18.44-fc-v185",
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cpu": "x86_64",
+    "cpu_count_logical": 2,
+    "torch_threads": 2,
+    "ram_total_mb": 8028,
+    "ram_available_mb": 6891,
+    "cuda": false
+  },
+  "rows": [
+    {
+      "arch": "transformer",
+      "n_seeds": 3,
+      "params": 4100544,
+      "val_loss_mean": 5.3885,
+      "val_loss_std": 0.046,
+      "val_ppl_mean": 218.87,
+      "peak_train_rss_mb_mean": 1413.5667,
+      "train_tokens_per_sec_mean": 3263.9,
+      "train_time_s_mean": 190.2
+    },
+    {
+      "arch": "feather_hybrid",
+      "n_seeds": 3,
+      "params": 4100544,
+      "val_loss_mean": 5.3597,
+      "val_loss_std": 0.0358,
+      "val_ppl_mean": 212.66,
+      "peak_train_rss_mb_mean": 1471.6667,
+      "train_tokens_per_sec_mean": 3636.2333,
+      "train_time_s_mean": 170.9
+    },
+    {
+      "arch": "feather_recurrent",
+      "n_seeds": 3,
+      "params": 4183488,
+      "val_loss_mean": 5.3446,
+      "val_loss_std": 0.0194,
+      "val_ppl_mean": 209.47,
+      "peak_train_rss_mb_mean": 1477.3667,
+      "train_tokens_per_sec_mean": 3705.0333,
+      "train_time_s_mean": 167.6
+    },
+    {
+      "arch": "feather_shared",
+      "n_seeds": 3,
+      "params": 3230400,
+      "val_loss_mean": 5.376,
+      "val_loss_std": 0.0413,
+      "val_ppl_mean": 216.16,
+      "peak_train_rss_mb_mean": 1463.9667,
+      "train_tokens_per_sec_mean": 3593.9667,
+      "train_time_s_mean": 172.9
+    }
+  ]
+}

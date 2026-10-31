@@ -1,0 +1,53 @@
+{
+  "system": {
+    "os": "Linux 6.18.44-fc-v185",
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cpu": "x86_64",
+    "cpu_count_logical": 2,
+    "torch_threads": 2,
+    "ram_total_mb": 8028,
+    "ram_available_mb": 6780,
+    "cuda": false
+  },
+  "rows": [
+    {
+      "model": "featherlm-nano",
+      "backend": "feather",
+      "params": 13239168,
+      "steps": 600,
+      "stop_reason": "early_stopped",
+      "best_val_step": 300,
+      "tokens": 17664,
+      "val_loss": 5.1312,
+      "perplexity": 169.217,
+      "bits_per_byte": 2.3602,
+      "top1_accuracy": 0.2269,
+      "top5_accuracy": 0.3821,
+      "peak_train_rss_mb": 2153.8,
+      "train_tokens_per_sec": 1414.8,
+      "train_time_min": 40.0,
+      "first_train_loss": 9.0066,
+      "last_train_loss": 3.0788
+    },
+    {
+      "model": "featherlm-nano-transformer",
+      "backend": "transformer",
+      "params": 13237632,
+      "steps": 800,
+      "stop_reason": "early_stopped",
+      "best_val_step": 500,
+      "tokens": 17664,
+      "val_loss": 5.022,
+      "perplexity": 151.711,
+      "bits_per_byte": 2.31,
+      "top1_accuracy": 0.2394,
+      "top5_accuracy": 0.3921,
+      "peak_train_rss_mb": 2077.3,
+      "train_tokens_per_sec": 1535.6,
+      "train_time_min": 35.7,
+      "first_train_loss": 9.0538,
+      "last_train_loss": 2.9322
+    }
+  ]
+}

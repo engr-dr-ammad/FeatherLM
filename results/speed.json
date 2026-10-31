@@ -1,0 +1,75 @@
+{
+  "system": {
+    "os": "Linux 6.18.44-fc-v185",
+    "python": "3.13.18",
+    "torch": "2.15.0+cu132",
+    "cpu": "x86_64",
+    "cpu_count_logical": 2,
+    "torch_threads": 2,
+    "ram_total_mb": 8028,
+    "ram_available_mb": 7023,
+    "cuda": false
+  },
+  "rows": [
+    {
+      "source": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "threads": 2,
+      "prompt_len": 128,
+      "decode_tokens": 64,
+      "ttft_ms": 22.51,
+      "decode_tokens_per_sec": 213.5
+    },
+    {
+      "source": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "threads": 2,
+      "prompt_len": 512,
+      "decode_tokens": 64,
+      "ttft_ms": 69.95,
+      "decode_tokens_per_sec": 202.6
+    },
+    {
+      "source": "configs/nano_cpu.yaml",
+      "backend": "feather",
+      "params": 13239168,
+      "threads": 2,
+      "prompt_len": 2048,
+      "decode_tokens": 64,
+      "ttft_ms": 397.18,
+      "decode_tokens_per_sec": 188.8
+    },
+    {
+      "source": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "threads": 2,
+      "prompt_len": 128,
+      "decode_tokens": 64,
+      "ttft_ms": 20.26,
+      "decode_tokens_per_sec": 188.4
+    },
+    {
+      "source": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "threads": 2,
+      "prompt_len": 512,
+      "decode_tokens": 64,
+      "ttft_ms": 69.33,
+      "decode_tokens_per_sec": 171.5
+    },
+    {
+      "source": "configs/nano_transformer_cpu.yaml",
+      "backend": "transformer",
+      "params": 13237632,
+      "threads": 2,
+      "prompt_len": 2048,
+      "decode_tokens": 64,
+      "ttft_ms": 311.66,
+      "decode_tokens_per_sec": 117.7
+    }
+  ]
+}

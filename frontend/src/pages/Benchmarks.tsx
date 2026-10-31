@@ -19,9 +19,11 @@ function Table({ rows, cols }: { rows: Row[]; cols?: string[] }) {
     </div>
   );
 }
-const show = (v: unknown) => (typeof v === "number" ? (Number.isInteger(v) ? v.toLocaleString() : v.toFixed(4)) : String(v ?? "—"));
+const show = (v: unknown) => (typeof v === "number"
+  ? (Number.isInteger(v) ? v.toLocaleString() : Math.abs(v) >= 100 ? v.toLocaleString(undefined, { maximumFractionDigits: 1 }) : v.toFixed(4))
+  : String(v ?? "—"));
 
-function Bars({ data, x, keys, title, unit }: { data: Row[]; x: string; keys: string[]; title: string; unit?: string }) {
+function Bars({ data, x, keys, title, unit, zoom }: { data: Row[]; x: string; keys: string[]; title: string; unit?: string; zoom?: boolean }) {
   return (
     <div className="card">
       <h3 className="mb-2 text-sm font-semibold">{title}</h3>
@@ -30,7 +32,8 @@ function Bars({ data, x, keys, title, unit }: { data: Row[]; x: string; keys: st
           <BarChart data={data}>
             <CartesianGrid stroke="#e7e5e4" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey={x} tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} unit={unit} />
+            <YAxis tick={{ fontSize: 11 }} unit={unit} domain={zoom ? ["dataMin - 0.05", "dataMax + 0.05"] : [0, "auto"]}
+              tickFormatter={(v: number) => (zoom ? v.toFixed(2) : String(v))} />
             <Tooltip />
             {keys.length > 1 && <Legend />}
             {keys.map((k, i) => <Bar key={k} dataKey={k} fill={COLORS[i % COLORS.length]} radius={[3, 3, 0, 0]} />)}
@@ -107,7 +110,7 @@ export default function Benchmarks() {
           <h2 className="font-semibold">Matched-budget comparison (multiple seeds)</h2>
           <div className="card"><Table rows={quality} /></div>
           <div className="grid gap-4 md:grid-cols-3">
-            <Bars data={quality} x="arch" keys={["val_loss_mean"]} title="Validation loss (lower is better)" />
+            <Bars data={quality} x="arch" keys={["val_loss_mean"]} title="Validation loss (lower is better; axis zoomed)" zoom />
             <Bars data={quality} x="arch" keys={["peak_train_rss_mb_mean"]} title="Peak training RAM" unit=" MB" />
             <Bars data={quality} x="arch" keys={["train_tokens_per_sec_mean"]} title="Training throughput (tok/s)" />
           </div>

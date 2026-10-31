@@ -1,0 +1,84 @@
+{
+  "reference": "runs/featherlm-nano/final",
+  "models": [
+    {
+      "model": "runs/featherlm-nano/final",
+      "quantization": "none",
+      "runtime": "dequantized",
+      "val_perplexity": 174.04,
+      "max_abs_logit_diff": 0.0,
+      "top1_agreement": 1.0,
+      "decode_tokens_per_sec": 202.6,
+      "file_bytes": 52962832,
+      "resident_weight_bytes": 52956672,
+      "peak_rss_mb_during_eval": 849.9
+    },
+    {
+      "model": "models/featherlm-nano-fp16",
+      "quantization": "fp16",
+      "runtime": "dequantized",
+      "val_perplexity": 174.041,
+      "max_abs_logit_diff": 0.01206064224243164,
+      "top1_agreement": 0.99951171875,
+      "decode_tokens_per_sec": 195.6,
+      "file_bytes": 26484472,
+      "resident_weight_bytes": 52956672,
+      "peak_rss_mb_during_eval": 842.1
+    },
+    {
+      "model": "models/featherlm-nano-int8",
+      "quantization": "int8",
+      "runtime": "dequantized",
+      "val_perplexity": 173.979,
+      "max_abs_logit_diff": 0.28876399993896484,
+      "top1_agreement": 0.99609375,
+      "decode_tokens_per_sec": 202.1,
+      "file_bytes": 13432240,
+      "resident_weight_bytes": 52956672,
+      "peak_rss_mb_during_eval": 850.4
+    },
+    {
+      "model": "models/featherlm-nano-int8",
+      "quantization": "int8",
+      "runtime": "packed",
+      "val_perplexity": 173.979,
+      "max_abs_logit_diff": 0.28876399993896484,
+      "top1_agreement": 0.99609375,
+      "decode_tokens_per_sec": 92.0,
+      "file_bytes": 13432240,
+      "resident_weight_bytes": 22827008,
+      "peak_rss_mb_during_eval": 887.1
+    },
+    {
+      "model": "models/featherlm-nano-int4",
+      "quantization": "int4",
+      "runtime": "dequantized",
+      "val_perplexity": 177.41,
+      "max_abs_logit_diff": 3.013723373413086,
+      "top1_agreement": 0.89599609375,
+      "decode_tokens_per_sec": 190.8,
+      "file_bytes": 7516176,
+      "resident_weight_bytes": 52956672,
+      "peak_rss_mb_during_eval": 874.4
+    },
+    {
+      "model": "models/featherlm-nano-int4",
+      "quantization": "int4",
+      "runtime": "packed",
+      "val_perplexity": 177.41,
+      "max_abs_logit_diff": 3.013723373413086,
+      "top1_agreement": 0.89599609375,
+      "decode_tokens_per_sec": 56.5,
+      "file_bytes": 7516176,
+      "resident_weight_bytes": 18319872,
+      "peak_rss_mb_during_eval": 881.6
+    }
+  ],
+  "onnx": {
+    "max_abs_logit_diff_vs_pytorch": 2.288818359375e-05,
+    "top1_agreement": 1.0,
+    "right_padding_max_diff": 1.239776611328125e-05,
+    "window_forward_ms": 75.3,
+    "file_bytes": 67180600
+  }
+}

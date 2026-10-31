@@ -93,6 +93,16 @@ def estimate_training_memory_mb(n_params: int, batch_size: int, seq_len: int, d_
     return (state + per_layer * n_layers + logits + overhead) / MB
 
 
+def cpu_model() -> str:
+    try:
+        for line in open("/proc/cpuinfo"):
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return platform.processor() or platform.machine()
+
+
 def system_info() -> dict:
     import torch
 
@@ -101,7 +111,7 @@ def system_info() -> dict:
         "os": f"{platform.system()} {platform.release()}",
         "python": platform.python_version(),
         "torch": torch.__version__,
-        "cpu": platform.processor() or platform.machine(),
+        "cpu": cpu_model(),
         "cpu_count_logical": psutil.cpu_count(logical=True),
         "torch_threads": torch.get_num_threads(),
         "ram_total_mb": round(vm.total / MB),

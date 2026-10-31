@@ -14,6 +14,8 @@ The first released model, **FeatherLM Nano** (13.2M parameters), is trained from
 weights on a 2-core CPU. It is a small research model, not an assistant: it writes
 Shakespeare-flavoured text and does not follow instructions.
 
+![FeatherLM Studio chat with the trained Nano model](docs/images/studio-chat.png)
+
 ## Status at a glance
 
 | Area | Status |
@@ -45,12 +47,12 @@ python -m featherlm.data.prepare --download tinyshakespeare --out data/shakespea
 # Train FeatherLM Nano (about 25-60 min on 2 cores; early stopping is on)
 python train.py --config configs/nano_cpu.yaml
 
-# Generate
-python inference.py --model runs/featherlm-nano/final --prompt "ROMEO:" --max-new-tokens 80
-python inference.py --model runs/featherlm-nano/final --chat        # interactive terminal
+# Generate (best/ = lowest validation loss; final/ = weights at the last step)
+python inference.py --model runs/featherlm-nano/best --prompt "ROMEO:" --max-new-tokens 80
+python inference.py --model runs/featherlm-nano/best --chat         # interactive terminal
 
 # Evaluate (loss, perplexity, bits per byte, top-1/top-5 accuracy)
-python evaluate.py --model runs/featherlm-nano/final --data data/shakespeare
+python evaluate.py --model runs/featherlm-nano/best --data data/shakespeare
 
 # API + Studio
 python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
@@ -70,11 +72,20 @@ python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 | ONNX export | `python -m featherlm.export.onnx_export --model runs/featherlm-nano/final --out models/featherlm-nano-onnx` |
 | Validate exports | `python -m featherlm.export.validate --reference runs/featherlm-nano/final --candidates models/featherlm-nano-int8 --onnx models/featherlm-nano-onnx --data data/shakespeare` |
 | All benchmarks | `./scripts/run_benchmarks.sh` |
-| Tests | `python -m pytest` |
+| Tests (91, CPU only) | `python -m pytest` |
 | Docker (local) | `docker compose up -d --build` |
 | Docker (production, inference only) | `docker compose -f docker-compose.prod.yml up -d` |
 | Cloud VM deploy | `./scripts/deploy.sh runs/featherlm-nano/final` (see `docs/deployment.md`) |
 | Frontend dev server | `cd frontend && npm run dev` |
+
+### FeatherLM Studio
+
+Five sections: Chat (streaming, generation settings, TTFT and tok/s, stop, clear), Model
+Manager (architecture, parameters, size, quantization, context, memory estimate, checkpoint
+import), Training (start/stop/resume background jobs with live loss, RAM, CPU and checkpoint
+status), Benchmarks (charts from `results/`) and Settings.
+
+![Training dashboard](docs/images/studio-training.png)
 
 ## REST API
 
@@ -82,7 +93,7 @@ OpenAI-style endpoints (`/v1/completions` works with the OpenAI client's `base_u
 
 ```bash
 curl http://127.0.0.1:8000/v1/completions -H "Content-Type: application/json" \
-  -d '{"model": "runs/featherlm-nano/final", "prompt": "ROMEO:", "max_tokens": 60, "temperature": 0.8, "stream": false}'
+  -d '{"model": "runs/featherlm-nano/best", "prompt": "ROMEO:", "max_tokens": 60, "temperature": 0.8, "stream": false}'
 ```
 
 | Endpoint | Purpose | Auth |
@@ -130,6 +141,15 @@ train.py inference.py evaluate.py finetune.py
 | Tiny | `configs/tiny_cpu.yaml` | 67.1M | small-scale language training | no |
 | Mobile | `configs/mobile.yaml` | 210.4M | edge inference experiments | no |
 | Desktop | `configs/desktop.yaml` | 679.8M | higher-capacity research | no (needs a GPU or large VM) |
+
+## Results so far
+
+Measured on a 2-vCPU Xeon with 7.8 GB RAM, no GPU. Details: `docs/benchmarks.md`, `docs/research.md`.
+
+* **Nano trains on CPU:** 13.2M params, loss 9.01 → 3.08, 40 min, peak RSS 2.15 GB (1.26 GB with gradient checkpointing).
+* **Constant inference memory:** Feather's decode state is 0.146 MB at 256, 1,024 or 4,096 tokens of context; the matched Transformer's KV cache grows 1.5 → 24 MB. Decode at 2,048 tokens: 189 vs 118 tok/s.
+* **Quality is not better (yet):** on Nano the parameter-matched Transformer reached lower validation loss (5.02 vs 5.13). At 4M params across 3 seeds the architectures are within noise of each other; a weight-shared Feather matched the Transformer with 21% fewer parameters.
+* **INT8 is effectively lossless:** 50.5 → 12.8 MB, perplexity 174.04 → 173.98. INT4: 7.2 MB, +2% perplexity.
 
 ## Known limitations
 
