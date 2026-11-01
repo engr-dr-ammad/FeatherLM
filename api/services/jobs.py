@@ -128,9 +128,35 @@ class JobManager:
             self._spawn(job_id, resume=False)
         return self.get(job_id)
 
+    def create_chat(self, name: str, raw: dict, label: str) -> dict:
+        """Start a chat fine-tuning job (finetune.py) from a config built by the teach service."""
+        if not NAME_RE.match(name):
+            raise JobError("run name: 1-48 chars of letters, digits, '_' or '-'")
+        t = raw.setdefault("training", {})
+        t["max_steps"] = max(1, min(int(t.get("max_steps", 200)), self.s.max_training_steps))
+        t["memory_budget_mb"] = min(float(t.get("memory_budget_mb") or self.s.training_memory_budget_mb),
+                                    self.s.training_memory_budget_mb)
+        if self.s.threads:
+            t["threads"] = self.s.threads
+        with self._lock:
+            if self._running_count() >= self.s.max_training_jobs:
+                raise JobError(f"at most {self.s.max_training_jobs} training job(s) may run at once")
+            out_dir = Path(raw["output_dir"])
+            cfg_path = out_dir / "job_config.yaml"
+            cfg_path.write_text(yaml.safe_dump(raw))
+            job_id = uuid.uuid4().hex[:12]
+            now = time.time()
+            with self._conn() as c:
+                c.execute("INSERT INTO jobs VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                          (job_id, name, label, str(cfg_path), str(out_dir), "pending", None, now, now, None,
+                           str(out_dir / "train.log"), "chat"))
+            self._spawn(job_id, resume=False)
+        return self.get(job_id)
+
     def _spawn(self, job_id: str, resume: bool) -> None:
         row = self._row(job_id)
-        cmd = [sys.executable, str(self.s.root / "train.py"), "--config", row["config_path"]]
+        script = "finetune.py" if row["kind"] == "chat" else "train.py"
+        cmd = [sys.executable, str(self.s.root / script), "--config", row["config_path"]]
         if not resume:
             cmd.append("--no-resume")
         log = open(row["log_path"], "a")

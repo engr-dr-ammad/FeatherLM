@@ -15,7 +15,8 @@ def tok():
 
 
 @pytest.mark.parametrize("text", ["", "hello world", "  leading spaces", "café naïve", "東京タワー",
-                                  "emoji 🙂🎉👩‍👩‍👧", "tabs\tand\nnewlines\r\n", "never seen: Žluťoučký kůň ﷺ"])
+                                  "emoji 🙂🎉👩‍👩‍👧", "tabs\tand\nnewlines\r\n", "never seen: Žluťoučký kůň ﷺ",
+                                  "snake_case __init__ nano_cpu.yaml", "x² ½ ①"])
 def test_round_trip(tok, text):
     import unicodedata
 
@@ -83,3 +84,27 @@ def test_incremental_decoder_utf8(tok):
         dec = IncrementalDecoder(tok)
         out = "".join(dec.push(i) for i in seq) + dec.flush()
         assert out == text
+
+
+def test_pretokenizer_drops_no_character():
+    """Every BMP character must survive pre-tokenization (v0.1.0 silently dropped "_")."""
+    import re
+
+    from featherlm.tokenizer.tokenizer import PRETOKENIZE_PATTERN
+
+    pat = re.compile(PRETOKENIZE_PATTERN)
+    chars = "".join(chr(c) for c in range(0x10000) if not 0xD800 <= c <= 0xDFFF)
+    for i in range(0, len(chars), 4096):
+        block = chars[i:i + 4096]
+        assert "".join(m.group() for m in pat.finditer(block)) == block
+
+
+def test_legacy_pattern_tokenizer_loads(tok, tmp_path):
+    from featherlm.tokenizer.tokenizer import LEGACY_PATTERNS
+
+    d = tok.to_dict()
+    d["pattern"] = next(iter(LEGACY_PATTERNS))
+    (tmp_path / "old.json").write_text(json.dumps(d))
+    old = ByteBPETokenizer.load(tmp_path / "old.json")
+    assert old.decode(old.encode("a_b")) == "a_b"  # upgraded: underscores kept
+    assert old.encode(CORPUS) == tok.encode(CORPUS)

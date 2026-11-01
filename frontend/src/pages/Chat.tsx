@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { fmt, get, ModelInfo, Perf, streamCompletion } from "../api";
+import { fmt, get, ModelInfo, Perf, post, streamCompletion } from "../api";
+import { storeGet, storeSet } from "./Teach";
 
 interface Msg { role: "user" | "assistant"; content: string; perf?: Perf; finish?: string; error?: boolean }
+
+const KEY_MODEL = "featherlm.chatModel";
+const KEY_DS = "featherlm.teachDataset";
 
 export default function Chat() {
   const [models, setModels] = useState<ModelInfo[]>([]);
@@ -10,6 +14,10 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [p, setP] = useState({ max_tokens: 200, temperature: 0.8, top_p: 0.95, top_k: 50, repetition_penalty: 1.1, seed: "", stop: "" });
+  const [teachIdx, setTeachIdx] = useState<number | null>(null);
+  const [draft, setDraft] = useState("");
+  const [teachDs, setTeachDs] = useState(storeGet(KEY_DS) || "my-chatbot");
+  const [teachNote, setTeachNote] = useState<{ i: number; text: string; ok: boolean } | null>(null);
   const abort = useRef<AbortController | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
 
@@ -17,8 +25,10 @@ export default function Chat() {
     get<{ data: { featherlm: ModelInfo }[] }>("/v1/models").then((r) => {
       const ms = r.data.map((d) => d.featherlm);
       setModels(ms);
-      const pref = ms.find((m) => m.id.endsWith("/best")) ?? ms.find((m) => m.id.endsWith("/final")) ?? ms[0];
-      if (pref) setModel(pref.id);
+      const wanted = storeGet(KEY_MODEL);
+      const pref = ms.find((m) => m.id === wanted) ?? ms.find((m) => m.capabilities.chat && m.id.endsWith("/best"))
+        ?? ms.find((m) => m.id.endsWith("/best")) ?? ms.find((m) => m.id.endsWith("/final")) ?? ms[0];
+      if (pref) pickModel(pref.id, ms);
     }).catch(() => setModels([]));
   }, []);
   // Braces matter: newer browsers return a Promise from scrollIntoView, which React would treat as a cleanup.
@@ -26,6 +36,32 @@ export default function Chat() {
 
   const info = models.find((m) => m.id === model);
   const chatMode = !!info?.capabilities.chat;
+
+  // Chat models answer best with low temperature; plain models need variety to continue text.
+  function pickModel(id: string, list: ModelInfo[] = models) {
+    setModel(id);
+    storeSet(KEY_MODEL, id);
+    const isChat = !!list.find((m) => m.id === id)?.capabilities.chat;
+    setP((old) => ({ ...old, temperature: isChat ? 0.2 : 0.8, max_tokens: isChat ? 120 : 200, repetition_penalty: isChat ? 1.0 : 1.1 }));
+    setMsgs([]);
+  }
+
+  async function saveTeach(i: number) {
+    const answer = draft.trim();
+    if (!answer) return;
+    const prior = msgs.slice(0, i).filter((m) => !m.error);
+    const messages = chatMode
+      ? [...prior.map(({ role, content }) => ({ role, content })), { role: "assistant", content: answer }]
+      : [{ role: "user", content: msgs[i - 1]?.content ?? "" }, { role: "assistant", content: answer }];
+    try {
+      await post(`/teach/datasets/${encodeURIComponent(teachDs)}/examples`, { messages }, true);
+      storeSet(KEY_DS, teachDs);
+      setTeachNote({ i, ok: true, text: `Saved to “${teachDs}”. Train it in the Teach tab.` });
+      setTeachIdx(null);
+    } catch (e) {
+      setTeachNote({ i, ok: false, text: `Could not save: ${(e as Error).message}` });
+    }
+  }
 
   async function send() {
     const text = input.trim();
@@ -70,7 +106,7 @@ export default function Chat() {
     <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
       <section className="card flex h-[calc(100vh-11rem)] min-h-[420px] flex-col p-0">
         <div className="flex flex-wrap items-center gap-2 border-b border-stone-200 p-3">
-          <select value={model} onChange={(e) => setModel(e.target.value)} className="min-w-0 flex-1">
+          <select value={model} onChange={(e) => pickModel(e.target.value)} className="min-w-0 flex-1">
             {models.length === 0 && <option value="">No models found — train one first</option>}
             {models.map((m) => <option key={m.id} value={m.id}>{m.id} · {fmt.params(m.parameters)} · {m.architecture}{m.quantization !== "none" ? ` · ${m.quantization}` : ""}</option>)}
           </select>
@@ -85,10 +121,14 @@ export default function Chat() {
           </p>
         )}
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
-          {msgs.length === 0 && <p className="mt-20 text-center text-sm text-stone-400">Enter a prompt to start generating.</p>}
+          {msgs.length === 0 && (
+            <p className="mt-20 text-center text-sm text-stone-400">
+              {chatMode ? "Say hi, or ask what FeatherLM is, how to install it, or how to teach it." : "Enter a prompt to start generating."}
+            </p>
+          )}
           {msgs.map((m, i) => (
             <div key={i} className={m.role === "user" ? "flex justify-end" : ""}>
-              <div className={`max-w-[85%] whitespace-pre-wrap rounded-lg px-3 py-2 text-sm ${m.role === "user" ? "bg-ink text-white" : m.error ? "bg-red-50 text-red-700" : "bg-stone-100 font-mono text-[13px] text-stone-800"}`}>
+              <div className={`max-w-[85%] whitespace-pre-wrap rounded-lg px-3 py-2 text-sm ${m.role === "user" ? "bg-ink text-white" : m.error ? "bg-red-50 text-red-700" : `bg-stone-100 text-stone-800 ${chatMode ? "" : "font-mono text-[13px]"}`}`}>
                 {m.role === "assistant" && !chatMode && <span className="text-stone-400">{msgs[i - 1]?.content}</span>}
                 {m.content || (busy && i === msgs.length - 1 ? "…" : "")}
               </div>
@@ -98,6 +138,25 @@ export default function Chat() {
                 </div>
               )}
               {m.finish === "stopped" && !m.perf && <div className="mt-1 text-[11px] text-stone-400">stopped</div>}
+              {m.role === "assistant" && !m.error && m.content && !(busy && i === msgs.length - 1) && teachIdx !== i && (
+                <button className="mt-1 text-[11px] font-medium text-amber-700 hover:underline"
+                  onClick={() => { setTeachIdx(i); setDraft(m.content.trim()); setTeachNote(null); }}>
+                  Teach a better answer
+                </button>
+              )}
+              {teachIdx === i && (
+                <div className="mt-2 max-w-[85%] space-y-2 rounded-lg border border-amber-300 bg-amber-50 p-3">
+                  <label>The answer FeatherLM should give</label>
+                  <textarea rows={3} className="w-full" value={draft} onChange={(e) => setDraft(e.target.value)} autoFocus />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-stone-500">Save to dataset</span>
+                    <input className="w-36" value={teachDs} onChange={(e) => setTeachDs(e.target.value.replace(/[^A-Za-z0-9_-]/g, "-"))} />
+                    <button className="btn-primary" onClick={() => saveTeach(i)} disabled={!draft.trim()}>Save</button>
+                    <button className="btn-ghost" onClick={() => setTeachIdx(null)}>Cancel</button>
+                  </div>
+                </div>
+              )}
+              {teachNote?.i === i && <div className={`mt-1 text-[11px] ${teachNote.ok ? "text-emerald-700" : "text-red-600"}`}>{teachNote.text}</div>}
             </div>
           ))}
           <div ref={bottom} />

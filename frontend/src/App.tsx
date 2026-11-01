@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { get } from "./api";
 import Chat from "./pages/Chat";
+import Teach, { storeSet } from "./pages/Teach";
 import Models from "./pages/Models";
 import Training from "./pages/Training";
 import Benchmarks from "./pages/Benchmarks";
@@ -8,6 +9,7 @@ import SettingsPage from "./pages/Settings";
 
 const TABS = [
   { id: "chat", label: "Chat" },
+  { id: "teach", label: "Teach" },
   { id: "models", label: "Model Manager" },
   { id: "training", label: "Training" },
   { id: "benchmarks", label: "Benchmarks" },
@@ -56,6 +58,7 @@ export default function App() {
       </header>
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-5">
         {tab === "chat" && <Chat />}
+        {tab === "teach" && <Teach openChat={(id) => { storeSet("featherlm.chatModel", id); go("chat"); }} />}
         {tab === "models" && <Models />}
         {tab === "training" && <Training />}
         {tab === "benchmarks" && <Benchmarks />}

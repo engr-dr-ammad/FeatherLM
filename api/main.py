@@ -19,11 +19,12 @@ from fastapi.staticfiles import StaticFiles
 
 from featherlm import __version__
 
-from .routes import inference, models, system, training
+from .routes import inference, models, system, teach, training
 from .services.jobs import JobManager
 from .services.metrics import Metrics
 from .services.models import ModelRegistry
 from .services.settings import Settings
+from .services.teach import TeachService
 
 log = logging.getLogger("featherlm")
 
@@ -51,6 +52,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.registry = ModelRegistry(settings)
     app.state.jobs = JobManager(settings)
     app.state.metrics = Metrics()
+    app.state.teach = TeachService(settings)
     app.state.started = time.time()
     saved = app.state.jobs.kv_get("settings", {}) or {}
     for k, v in saved.items():
@@ -87,6 +89,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(models.router)
     app.include_router(inference.router)
     app.include_router(training.router)
+    app.include_router(teach.router)
 
     dist = Path(__file__).resolve().parents[1] / "frontend" / "dist"
     if settings.serve_frontend and (dist / "index.html").exists():

@@ -7,7 +7,7 @@ public final class FeatherTokenizer {
     private(set) var vocab: [[UInt8]] = []
     // ICU regular expressions treat \w as Unicode word characters, matching Python's re.
     private let regex = try! NSRegularExpression(
-        pattern: #"'(?:s|t|re|ve|m|ll|d)| ?[^\W\d_]+| ?\d{1,3}| ?[^\s\w]+|\s+(?!\S)|\s+"#)
+        pattern: #"'(?:s|t|re|ve|m|ll|d)| ?[^\W\d_]+| ?\d{1,3}| ?(?:[^\s\w]|_)+|\s+(?!\S)|\s+"#)
 
     public var vocabSize: Int { vocab.count }
 

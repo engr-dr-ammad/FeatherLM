@@ -1,0 +1,282 @@
+{
+  "model": "runs/featherlm-nano-chat/best",
+  "accuracy": 0.4762,
+  "correct": 20,
+  "total": 42,
+  "per_intent": {
+    "benefits": "1/2",
+    "bye": "0/2",
+    "creator": "0/2",
+    "gpu": "2/2",
+    "greet": "1/2",
+    "how_are_you": "1/2",
+    "identity": "0/2",
+    "install": "2/2",
+    "joke": "2/2",
+    "license": "1/2",
+    "limits": "2/2",
+    "math": "0/4",
+    "memory": "1/2",
+    "privacy": "1/2",
+    "shakespeare": "2/2",
+    "teach": "2/2",
+    "thanks": "0/2",
+    "train": "0/2",
+    "unknown": "1/2",
+    "what_is": "1/2"
+  },
+  "examples": [
+    {
+      "intent": "greet",
+      "question": "howdy",
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "correct": false
+    },
+    {
+      "intent": "greet",
+      "question": "Hi featherlm",
+      "reply": "Hello! I'm FeatherLM, a small language model. How can I help you today?",
+      "correct": true
+    },
+    {
+      "intent": "how_are_you",
+      "question": "what's up?",
+      "reply": "FeatherLM trains on a normal CPU with no GPU, runs fully offline so your data stays private, keeps its memory flat on long texts, and the 8-bit version is 4 times smaller with the same quality. It is free and open source.",
+      "correct": false
+    },
+    {
+      "intent": "how_are_you",
+      "question": "How have you been?",
+      "reply": "I'm doing well, thanks for asking! How can I help you?",
+      "correct": true
+    },
+    {
+      "intent": "identity",
+      "question": "who am i talking to?",
+      "reply": "No GPU is needed. FeatherLM trains and runs on an ordinary CPU. The Nano model trained on 2 CPU cores in about 40 minutes, with a peak of about 2 GB of RAM.",
+      "correct": false
+    },
+    {
+      "intent": "identity",
+      "question": "What should i call you?",
+      "reply": "Yes! Open the Teach tab in FeatherLM Studio, add questions with the answers you want, and click Train. When training finishes, chat with your new model. You can also click Teach under any of my replies to save a better answer.",
+      "correct": false
+    },
+    {
+      "intent": "creator",
+      "question": "who programmed you",
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "correct": false
+    },
+    {
+      "intent": "creator",
+      "question": "please, who is behind featherlm",
+      "reply": "FeatherLM is a hardware-efficient language model. It can be trained from scratch on a normal CPU, and while it writes, its memory stays at about 0.15 MB no matter how long the text gets.",
+      "correct": false
+    },
+    {
+      "intent": "what_is",
+      "question": "what is special about you?",
+      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
+      "correct": false
+    },
+    {
+      "intent": "what_is",
+      "question": "What is featherlm used for",
+      "reply": "FeatherLM is a hardware-efficient language model. It can be trained from scratch on a normal CPU, and while it writes, its memory stays at about 0.15 MB no matter how long the text gets.",
+      "correct": true
+    },
+    {
+      "intent": "benefits",
+      "question": "Give me reasons to use featherlm",
+      "reply": "FeatherLM is a hardware-efficient language model. It can be trained from scratch on a normal CPU, and while it writes, its memory stays at about 0.15 MB no matter how long the text gets.",
+      "correct": false
+    },
+    {
+      "intent": "benefits",
+      "question": "please, What are the pros",
+      "reply": "FeatherLM trains on a normal CPU with no GPU, runs fully offline so your data stays private, keeps its memory flat on long texts, and the 8-bit version is 4 times smaller with the same quality. It is free and open source.",
+      "correct": true
+    },
+    {
+      "intent": "gpu",
+      "question": "is a gpu required?",
+      "reply": "No GPU is needed. FeatherLM trains and runs on an ordinary CPU. The Nano model trained on 2 CPU cores in about 40 minutes, with a peak of about 2 GB of RAM.",
+      "correct": true
+    },
+    {
+      "intent": "gpu",
+      "question": "does it run on a normal computer",
+      "reply": "No GPU is needed. FeatherLM trains and runs on an ordinary CPU. The Nano model trained on 2 CPU cores in about 40 minutes, with a peak of about 2 GB of RAM.",
+      "correct": true
+    },
+    {
+      "intent": "install",
+      "question": "Where can i download you?",
+      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
+      "correct": true
+    },
+    {
+      "intent": "install",
+      "question": "how do i install you",
+      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
+      "correct": true
+    },
+    {
+      "intent": "train",
+      "question": "how do i start training?",
+      "reply": "First prepare data with python -m featherlm.data.prepare, then run python train.py --config configs/nanocpu.yaml. The Nano model trains in about 40 minutes on 2 CPU cores.",
+      "correct": false
+    },
+    {
+      "intent": "train",
+      "question": "please, how do i train it on my data",
+      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
+      "correct": false
+    },
+    {
+      "intent": "teach",
+      "question": "How do i teach you a new answer?",
+      "reply": "Yes! Open the Teach tab in FeatherLM Studio, add questions with the answers you want, and click Train. When training finishes, chat with your new model. You can also click Teach under any of my replies to save a better answer.",
+      "correct": true
+    },
+    {
+      "intent": "teach",
+      "question": "Can you learn from me?",
+      "reply": "Yes! Open the Teach tab in FeatherLM Studio, add questions with the answers you want, and click Train. When training finishes, chat with your new model. You can also click Teach under any of my replies to save a better answer.",
+      "correct": true
+    },
+    {
+      "intent": "limits",
+      "question": "Are you as good as gpt?",
+      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
+      "correct": true
+    },
+    {
+      "intent": "limits",
+      "question": "can you replace chatgpt?",
+      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
+      "correct": true
+    },
+    {
+      "intent": "memory",
+      "question": "how much ram does training use",
+      "reply": "The Nano model has about 13 million parameters. Training peaked at about 2 GB of RAM, and while I write, my memory state stays at about 0.15 MB however long the text is. The 8-bit version is about 13 MB.",
+      "correct": true
+    },
+    {
+      "intent": "memory",
+      "question": "how heavy are you",
+      "reply": "I'm doing well, thanks for asking! How can I help you?",
+      "correct": false
+    },
+    {
+      "intent": "license",
+      "question": "is the code public",
+      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
+      "correct": false
+    },
+    {
+      "intent": "license",
+      "question": "is featherlm free to use?",
+      "reply": "Yes, FeatherLM is free and open source under the MIT license.",
+      "correct": true
+    },
+    {
+      "intent": "privacy",
+      "question": "FeatherLM, is my data safe",
+      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
+      "correct": false
+    },
+    {
+      "intent": "privacy",
+      "question": "do you work without internet?",
+      "reply": "I run fully offline on your own device, so your data stays with you. Nothing is sent to the internet.",
+      "correct": true
+    },
+    {
+      "intent": "thanks",
+      "question": "Awesome thank you",
+      "reply": "I'm doing well, thanks for asking! How can I help you?",
+      "correct": false
+    },
+    {
+      "intent": "thanks",
+      "question": "ty",
+      "reply": "I'm doing well, thanks for asking! How can I help you?",
+      "correct": false
+    },
+    {
+      "intent": "bye",
+      "question": "Catch you later.",
+      "reply": "You're welcome! Anything else I can help with?",
+      "correct": false
+    },
+    {
+      "intent": "bye",
+      "question": "FeatherLM, Farewell",
+      "reply": "You're welcome! Anything else I can help with?",
+      "correct": false
+    },
+    {
+      "intent": "joke",
+      "question": "i need a joke",
+      "reply": "Why don't small models get lost? They always follow the next token.",
+      "correct": true
+    },
+    {
+      "intent": "joke",
+      "question": "please, joke please",
+      "reply": "Why did the language model go to school? To improve its word choice!",
+      "correct": true
+    },
+    {
+      "intent": "unknown",
+      "question": "Explain black holes.",
+      "reply": "FeatherLM trains on a normal CPU with no GPU, runs fully offline so your data stays private, keeps its memory flat on long texts, and the 8-bit version is 4 times smaller with the same quality. It is free and open source.",
+      "correct": false
+    },
+    {
+      "intent": "unknown",
+      "question": "what year is it?",
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "correct": true
+    },
+    {
+      "intent": "shakespeare",
+      "question": "share a shakespeare line?",
+      "reply": "Here is a line from Shakespeare: \"And, by my death, I have heard\"",
+      "correct": true
+    },
+    {
+      "intent": "shakespeare",
+      "question": "i want a shakespeare quote?",
+      "reply": "Here is a line from Shakespeare: \"And, by my death, I have heard\"",
+      "correct": true
+    },
+    {
+      "intent": "math",
+      "question": "How much is 7 plus 5?",
+      "reply": "5 plus 0 is 20.",
+      "correct": false
+    },
+    {
+      "intent": "math",
+      "question": "How much is 13 minus 4?",
+      "reply": "13 minus 0 is 13.",
+      "correct": false
+    },
+    {
+      "intent": "math",
+      "question": "How much is 9 plus 9?",
+      "reply": "5 plus 0 is 20.",
+      "correct": false
+    },
+    {
+      "intent": "math",
+      "question": "How much is 18 minus 6?",
+      "reply": "15 minus 0 is 12.",
+      "correct": false
+    }
+  ]
+}

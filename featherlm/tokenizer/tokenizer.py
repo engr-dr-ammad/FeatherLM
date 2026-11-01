@@ -26,7 +26,12 @@ SPECIAL_TOKENS = [
     "<|end|>",
 ]
 # Python `re` version of the GPT-2 pre-tokenizer pattern (\w is Unicode-aware).
-PRETOKENIZE_PATTERN = r"""'(?:s|t|re|ve|m|ll|d)| ?[^\W\d_]+| ?\d{1,3}| ?[^\s\w]+|\s+(?!\S)|\s+"""
+# Every character must be matched by some alternative, or it would be silently dropped:
+# "_" is in \w but is neither a letter nor a digit, so it is listed with the punctuation.
+PRETOKENIZE_PATTERN = r"""'(?:s|t|re|ve|m|ll|d)| ?[^\W\d_]+| ?\d{1,3}| ?(?:[^\s\w]|_)+|\s+(?!\S)|\s+"""
+# v0.1.0 pattern: identical except that it dropped "_". Tokenizers saved with it are upgraded on load;
+# text without underscores tokenizes identically under both patterns.
+LEGACY_PATTERNS = {r"""'(?:s|t|re|ve|m|ll|d)| ?[^\W\d_]+| ?\d{1,3}| ?[^\s\w]+|\s+(?!\S)|\s+"""}
 FORMAT_VERSION = 1
 
 
@@ -153,7 +158,7 @@ class ByteBPETokenizer:
             raise ValueError("not a FeatherLM tokenizer file")
         if d.get("version") != FORMAT_VERSION:
             raise ValueError(f"unsupported tokenizer version {d.get('version')}")
-        if d.get("pattern") != PRETOKENIZE_PATTERN:
+        if d.get("pattern") != PRETOKENIZE_PATTERN and d.get("pattern") not in LEGACY_PATTERNS:
             raise ValueError("tokenizer was trained with a different pre-tokenizer pattern")
         specials = d["special_tokens"]
         if not isinstance(specials, list) or not all(isinstance(t, str) and t for t in specials):

@@ -12,7 +12,7 @@ class FeatherTokenizer(json: String) {
     private val vocab = ArrayList<ByteArray>()
     // Same pattern as the Python pre-tokenizer; UNICODE_CHARACTER_CLASS makes \w Unicode-aware like Python's re.
     private val pattern = Pattern.compile(
-        "'(?:s|t|re|ve|m|ll|d)| ?[^\\W\\d_]+| ?\\d{1,3}| ?[^\\s\\w]+|\\s+(?!\\S)|\\s+",
+        "'(?:s|t|re|ve|m|ll|d)| ?[^\\W\\d_]+| ?\\d{1,3}| ?(?:[^\\s\\w]|_)+|\\s+(?!\\S)|\\s+",
         Pattern.UNICODE_CHARACTER_CLASS
     )
 
