@@ -1,13 +1,13 @@
 {
   "model": "runs/featherlm-nano-chat/best",
-  "accuracy": 0.4762,
-  "correct": 20,
+  "accuracy": 0.5238,
+  "correct": 22,
   "total": 42,
   "per_intent": {
-    "benefits": "1/2",
-    "bye": "0/2",
+    "benefits": "0/2",
+    "bye": "1/2",
     "creator": "0/2",
-    "gpu": "2/2",
+    "gpu": "1/2",
     "greet": "1/2",
     "how_are_you": "1/2",
     "identity": "0/2",
@@ -16,12 +16,12 @@
     "license": "1/2",
     "limits": "2/2",
     "math": "0/4",
-    "memory": "1/2",
-    "privacy": "1/2",
+    "memory": "0/2",
+    "privacy": "2/2",
     "shakespeare": "2/2",
     "teach": "2/2",
-    "thanks": "0/2",
-    "train": "0/2",
+    "thanks": "2/2",
+    "train": "1/2",
     "unknown": "1/2",
     "what_is": "1/2"
   },
@@ -29,19 +29,19 @@
     {
       "intent": "greet",
       "question": "howdy",
-      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "reply": "Yes, FeatherLM is free and open source under the MIT license.",
       "correct": false
     },
     {
       "intent": "greet",
       "question": "Hi featherlm",
-      "reply": "Hello! I'm FeatherLM, a small language model. How can I help you today?",
+      "reply": "Hi there! I'm FeatherLM. What would you like to know?",
       "correct": true
     },
     {
       "intent": "how_are_you",
       "question": "what's up?",
-      "reply": "FeatherLM trains on a normal CPU with no GPU, runs fully offline so your data stays private, keeps its memory flat on long texts, and the 8-bit version is 4 times smaller with the same quality. It is free and open source.",
+      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
       "correct": false
     },
     {
@@ -53,7 +53,7 @@
     {
       "intent": "identity",
       "question": "who am i talking to?",
-      "reply": "No GPU is needed. FeatherLM trains and runs on an ordinary CPU. The Nano model trained on 2 CPU cores in about 40 minutes, with a peak of about 2 GB of RAM.",
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
       "correct": false
     },
     {
@@ -77,7 +77,7 @@
     {
       "intent": "what_is",
       "question": "what is special about you?",
-      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
+      "reply": "I'm FeatherLM, a small open-source language model with about 13 million parameters. I was developed by Ammad Aslam, and I can be trained and run on an ordinary CPU.",
       "correct": false
     },
     {
@@ -95,8 +95,8 @@
     {
       "intent": "benefits",
       "question": "please, What are the pros",
-      "reply": "FeatherLM trains on a normal CPU with no GPU, runs fully offline so your data stays private, keeps its memory flat on long texts, and the 8-bit version is 4 times smaller with the same quality. It is free and open source.",
-      "correct": true
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "correct": false
     },
     {
       "intent": "gpu",
@@ -107,8 +107,8 @@
     {
       "intent": "gpu",
       "question": "does it run on a normal computer",
-      "reply": "No GPU is needed. FeatherLM trains and runs on an ordinary CPU. The Nano model trained on 2 CPU cores in about 40 minutes, with a peak of about 2 GB of RAM.",
-      "correct": true
+      "reply": "I run fully offline on your own device, so your data stays with you. Nothing is sent to the internet.",
+      "correct": false
     },
     {
       "intent": "install",
@@ -125,8 +125,8 @@
     {
       "intent": "train",
       "question": "how do i start training?",
-      "reply": "First prepare data with python -m featherlm.data.prepare, then run python train.py --config configs/nanocpu.yaml. The Nano model trains in about 40 minutes on 2 CPU cores.",
-      "correct": false
+      "reply": "First prepare data with python -m featherlm.data.prepare, then run python train.py --config configs/nano_cpu.yaml. The Nano model trains in about 40 minutes on 2 CPU cores.",
+      "correct": true
     },
     {
       "intent": "train",
@@ -161,8 +161,8 @@
     {
       "intent": "memory",
       "question": "how much ram does training use",
-      "reply": "The Nano model has about 13 million parameters. Training peaked at about 2 GB of RAM, and while I write, my memory state stays at about 0.15 MB however long the text is. The 8-bit version is about 13 MB.",
-      "correct": true
+      "reply": "First prepare data with python -m featherlm.data.prepare, then run python train.py --config configs/nano_cpu.yaml. The Nano model trains in about 40 minutes on 2 CPU cores.",
+      "correct": false
     },
     {
       "intent": "memory",
@@ -185,8 +185,8 @@
     {
       "intent": "privacy",
       "question": "FeatherLM, is my data safe",
-      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
-      "correct": false
+      "reply": "I run fully offline on your own device, so your data stays with you. Nothing is sent to the internet.",
+      "correct": true
     },
     {
       "intent": "privacy",
@@ -197,25 +197,25 @@
     {
       "intent": "thanks",
       "question": "Awesome thank you",
-      "reply": "I'm doing well, thanks for asking! How can I help you?",
-      "correct": false
+      "reply": "Happy to help!",
+      "correct": true
     },
     {
       "intent": "thanks",
       "question": "ty",
-      "reply": "I'm doing well, thanks for asking! How can I help you?",
-      "correct": false
+      "reply": "Happy to help!",
+      "correct": true
     },
     {
       "intent": "bye",
       "question": "Catch you later.",
-      "reply": "You're welcome! Anything else I can help with?",
-      "correct": false
+      "reply": "See you later!",
+      "correct": true
     },
     {
       "intent": "bye",
       "question": "FeatherLM, Farewell",
-      "reply": "You're welcome! Anything else I can help with?",
+      "reply": "Happy to help!",
       "correct": false
     },
     {
@@ -227,7 +227,7 @@
     {
       "intent": "joke",
       "question": "please, joke please",
-      "reply": "Why did the language model go to school? To improve its word choice!",
+      "reply": "Why don't small models get lost? They always follow the next token.",
       "correct": true
     },
     {
@@ -245,37 +245,37 @@
     {
       "intent": "shakespeare",
       "question": "share a shakespeare line?",
-      "reply": "Here is a line from Shakespeare: \"And, by my death, I have heard\"",
+      "reply": "Here is a line from Shakespeare: \"And from her service is free and open source.\"",
       "correct": true
     },
     {
       "intent": "shakespeare",
       "question": "i want a shakespeare quote?",
-      "reply": "Here is a line from Shakespeare: \"And, by my death, I have heard\"",
+      "reply": "Here is a line from Shakespeare: \"And from her service is free and open source.\"",
       "correct": true
     },
     {
       "intent": "math",
-      "question": "How much is 7 plus 5?",
-      "reply": "5 plus 0 is 20.",
+      "question": "What is 7 plus 5?",
+      "reply": "7 plus 5 is 17.",
       "correct": false
     },
     {
       "intent": "math",
-      "question": "How much is 13 minus 4?",
-      "reply": "13 minus 0 is 13.",
+      "question": "What is 9 plus 9?",
+      "reply": "9 plus 9 is 15.",
       "correct": false
     },
     {
       "intent": "math",
-      "question": "How much is 9 plus 9?",
-      "reply": "5 plus 0 is 20.",
+      "question": "What is 13 minus 4?",
+      "reply": "13 minus 4 is 10.",
       "correct": false
     },
     {
       "intent": "math",
-      "question": "How much is 18 minus 6?",
-      "reply": "15 minus 0 is 12.",
+      "question": "What is 18 minus 6?",
+      "reply": "18 minus 6 is 10.",
       "correct": false
     }
   ]

@@ -28,9 +28,10 @@ The result is `runs/featherlm-nano-chat/best`. Studio's Chat tab picks it automa
 
 The starter data (`featherlm/data/chat_starter.py`, MIT) covers greetings, what FeatherLM
 is, who made it, benefits, hardware, installation, training, teaching, limitations,
-memory, license, privacy, jokes, simple addition and subtraction up to 20, Shakespeare
-quotes from the public-domain corpus, and an honest "I don't know that yet" for anything
-else. Two phrasings per topic are held out of training to measure generalisation:
+memory, license, privacy, jokes, Shakespeare quotes from the public-domain corpus, and honest answers when it can't help: "I don't know
+that yet" for other questions, and "I'm not reliable at maths yet" for arithmetic (a model
+this small memorises sums instead of learning to add, and would otherwise give confident
+wrong answers). Two phrasings per topic are held out of training to measure generalisation:
 
 ```bash
 python -m featherlm.benchmarks.chat_eval --model runs/featherlm-nano-chat/best \

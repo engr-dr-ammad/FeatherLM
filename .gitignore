@@ -25,3 +25,4 @@ frontend/dist/
 .DS_Store
 .idea/
 .vscode/
+frontend/*.tsbuildinfo

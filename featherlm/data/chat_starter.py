@@ -106,8 +106,8 @@ INTENTS: dict[str, tuple[list[str], list[str]]] = {
         "can you do anything", "how good are you", "what are your weaknesses", "do you know everything",
         "are you as good as gpt", "can you replace chatgpt",
     ], [
-        "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths "
-        "and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more "
+        "I'm a small research model, so I only know what I've been taught: things about FeatherLM and a bit "
+        "of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more "
         "in the Teach tab.",
     ]),
     "memory": ([
@@ -171,7 +171,11 @@ SHAKESPEARE_Q = ["give me a shakespeare quote", "quote shakespeare", "say someth
                  "share a shakespeare line", "i want a shakespeare quote"]
 MATH_TEMPLATES = [("what is {a} plus {b}", "plus"), ("what's {a} + {b}", "plus"), ("add {a} and {b}", "plus"),
                   ("{a} plus {b}", "plus"), ("what is {a} minus {b}", "minus"), ("what's {a} - {b}", "minus"),
-                  ("subtract {b} from {a}", "minus")]
+                  ("subtract {b} from {a}", "minus"), ("what is {a} times {b}", "times"), ("what's {a} * {b}", "times"),
+                  ("divide {a} by {b}", "div"), ("calculate {a} + {b}", "plus"),
+                  ("how much is {a} plus {b}", "plus")]  # last template is held out for evaluation
+MATH_ANSWER = ("I'm not reliable at maths yet, so please use a calculator for that. You can teach me specific "
+               "answers in the Teach tab.")
 
 
 # More phrasings, inserted before each intent's two held-out phrasings.
@@ -385,21 +389,15 @@ def build(corpus: str | None = None, seed: int = 0, per_intent: int = 160):
         train.append(conv(_vary(q, rng), f"Here is a line from Shakespeare: \"{line}\""))
     for q in SHAKESPEARE_Q[-2:]:
         val.append({**conv(q + "?", "Here is a line from Shakespeare:"), "intent": "shakespeare"})
-    held_math = {(7, 5, "plus"), (13, 4, "minus"), (9, 9, "plus"), (18, 6, "minus")}
-    n = 0
-    while n < 900:
-        tmpl, op = rng.choice(MATH_TEMPLATES)
-        a, b = rng.randint(0, 20), rng.randint(0, 20)
-        if op == "minus" and b > a:
-            a, b = b, a
-        if (a, b, op) in held_math:
-            continue
-        res = a + b if op == "plus" else a - b
-        train.append(conv(_vary(tmpl.format(a=a, b=b), rng), f"{a} {op} {b} is {res}."))
-        n += 1
-    for a, b, op in sorted(held_math):
-        res = a + b if op == "plus" else a - b
-        val.append({**conv(f"What is {a} {op} {b}?", f"{a} {op} {b} is {res}."), "intent": "math"})
+    # Arithmetic: a 13M model memorises sums instead of learning to add, and then gives confident wrong
+    # answers on new numbers. It is taught to say so instead.
+    for i in range(500):
+        tmpl, op = MATH_TEMPLATES[i % (len(MATH_TEMPLATES) - 1)]
+        a, b = rng.randint(0, 99), rng.randint(0, 99)
+        train.append(conv(_vary(tmpl.format(a=a, b=b), rng), MATH_ANSWER))
+    for a, b in ((7, 5), (13, 4), (21, 9), (64, 8)):
+        q = MATH_TEMPLATES[-1][0].format(a=a, b=b) + "?"
+        val.append({**conv(q[0].upper() + q[1:], MATH_ANSWER), "intent": "math"})
     # multi-turn: greeting then a question
     names = [n for n in INTENTS if n not in ("greet", "thanks", "bye")]
     for _ in range(400):
