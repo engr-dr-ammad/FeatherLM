@@ -42,6 +42,9 @@ Results are in [the results section](#results).
 
 ## 2. Teach it in FeatherLM Studio
 
+![Teach tab: examples with several phrasings, training progress and the new model](images/studio-teach.png)
+
+
 Start the server (`python -m uvicorn api.main:app --port 8000`) and open http://127.0.0.1:8000.
 
 1. **Teach tab**: pick or create a dataset (e.g. `my-chatbot`) and add examples:
@@ -90,14 +93,28 @@ starter data and repeats your examples; the CLI uses exactly the file you give i
 Chat in the terminal:
 
 ```bash
-python inference.py --model runs/featherlm-nano-chat/best --chat --temperature 0.2
+python inference.py --model runs/featherlm-nano-chat/best --chat --temperature 0 --repetition-penalty 1
 ```
+
+![Chatting with a taught model](images/studio-chatbot.png)
+
+### Answering one question at a time
+
+By default Studio and the terminal chat send only your latest message. FeatherLM's chat
+data is mostly single questions, and in testing a few earlier turns were enough to make
+it drift (for example, answering "Who made you?" with the end of a previous answer),
+while the same questions asked on their own were answered correctly. Tick
+**Remember earlier messages** in Studio (or pass `--history`) to send the conversation;
+the server always trims history to fit the model's 256-token context.
+
+Replies use temperature 0 (always the most likely answer) by default: with sampling, the
+bot occasionally miscopied details such as the GitHub link.
 
 ## 4. API
 
 ```bash
 curl http://127.0.0.1:8000/v1/chat/completions -H "Content-Type: application/json" \
-  -d '{"model": "runs/featherlm-nano-chat/best", "temperature": 0.2,
+  -d '{"model": "runs/featherlm-nano-chat/best", "temperature": 0,
        "messages": [{"role": "user", "content": "How do I install FeatherLM?"}]}'
 ```
 
@@ -116,4 +133,30 @@ Progress of a training run: `GET /training/jobs/{id}` and `/training/jobs/{id}/m
 
 ## Results
 
-Measurements in progress; see `results/chat_eval.json` when present.
+Measured on the reference machine (2-vCPU Xeon, no GPU), greedy decoding.
+
+**Starter chatbot** (`runs/featherlm-nano-chat/best`, 900 fine-tuning steps, ~20 min):
+28 of 42 held-out questions answered correctly (67%). These
+phrasings never appear in training. Per topic: benefits 0/2, bye 1/2, creator 0/2, gpu 1/2, greet 2/2, how_are_you 1/2, identity 0/2, install 2/2, joke 2/2, license 1/2, limits 2/2, math 4/4, memory 0/2, privacy 2/2, shakespeare 2/2, teach 2/2, thanks 1/2, train 2/2, unknown 2/2, what_is 1/2.
+Asked in the exact phrasings it was trained on, it answers reliably; rewordings are its
+weak spot, because its only pretraining was Shakespeare, so it matches on familiar words
+more than on meaning.
+
+**Teaching** (`scripts/eval_teaching.py`: a 6-question shop FAQ taught through the same code
+path as the Teach tab, 200 full fine-tuning steps, starter conversations mixed in):
+
+| Taught phrasings per answer | Training time | Taught questions | Unseen rephrasings | Starter held-out before → after |
+|---|---|---|---|---|
+| 1 | 3.4 min | 100% | 17% | 67% → 64% |
+| 3 | 3.3 min | 100% | 50% | 67% → 62% |
+
+So: what you teach, it reliably repeats; giving 2-3 phrasings per answer triples how often
+new wordings are understood; and it keeps most of what it knew. Expect to add phrasings
+for questions your users actually ask, which is how small intent-style chatbots are
+normally built.
+
+Raw results: `results/chat_eval.json`, `results/teach_eval.json`, `results/teach_eval_3phrasings.json`.
+
+**Next improvements:** pretraining on a larger modern-English corpus (the biggest lever for
+understanding rewordings), and longer multi-turn training conversations so remembering
+history works as well as single questions.

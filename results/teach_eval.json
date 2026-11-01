@@ -1,0 +1,115 @@
+{
+  "base": "runs/featherlm-nano-chat/best",
+  "steps": 200,
+  "mode": "full",
+  "taught_examples": 6,
+  "training_rows": 720,
+  "train_time_s": 204.2,
+  "taught_accuracy": 1.0,
+  "rephrased_accuracy": 0.16666666666666666,
+  "starter_heldout_before": 0.6667,
+  "starter_heldout_after": 0.6429,
+  "rows": [
+    {
+      "kind": "taught",
+      "question": "What are your opening hours?",
+      "expected": "We are open Monday to Friday, from 9am to 5pm.",
+      "reply": "We are open Monday to Friday, from 9am to 5pm.",
+      "correct": true
+    },
+    {
+      "kind": "rephrased",
+      "question": "when are you open",
+      "expected": "We are open Monday to Friday, from 9am to 5pm.",
+      "reply": "Yes, FeatherLM is free and open source under the MIT license.",
+      "correct": false
+    },
+    {
+      "kind": "taught",
+      "question": "Where is the shop?",
+      "expected": "The shop is at 12 Main Street, Lisbon.",
+      "reply": "The shop is at 12 Main Street, Lisbon.",
+      "correct": true
+    },
+    {
+      "kind": "rephrased",
+      "question": "where are you located?",
+      "expected": "The shop is at 12 Main Street, Lisbon.",
+      "reply": "You're welcome! Anything else I can help with?",
+      "correct": false
+    },
+    {
+      "kind": "taught",
+      "question": "Do you offer delivery?",
+      "expected": "Yes, we deliver within Lisbon for 5 euros.",
+      "reply": "Yes, we deliver within Lisbon for 5 euros.",
+      "correct": true
+    },
+    {
+      "kind": "rephrased",
+      "question": "can you deliver to my house?",
+      "expected": "Yes, we deliver within Lisbon for 5 euros.",
+      "reply": "Yes, we deliver within Lisbon for 5 euros.",
+      "correct": true
+    },
+    {
+      "kind": "taught",
+      "question": "How can I contact you?",
+      "expected": "Email us at hello@example.com or call 210 000 000.",
+      "reply": "Email us at hello@example.com or call 210 000 000.",
+      "correct": true
+    },
+    {
+      "kind": "rephrased",
+      "question": "what is your phone number?",
+      "expected": "Email us at hello@example.com or call 210 000 000.",
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "correct": false
+    },
+    {
+      "kind": "taught",
+      "question": "What is your return policy?",
+      "expected": "You can return any item within 30 days with the receipt.",
+      "reply": "You can return any item within 30 days with the receipt.",
+      "correct": true
+    },
+    {
+      "kind": "rephrased",
+      "question": "can i return something i bought?",
+      "expected": "You can return any item within 30 days with the receipt.",
+      "reply": "Yes, FeatherLM is free and open source under the MIT license.",
+      "correct": false
+    },
+    {
+      "kind": "taught",
+      "question": "Who owns the shop?",
+      "expected": "The shop is owned by Ammad Aslam.",
+      "reply": "The shop is owned by Ammad Aslam.",
+      "correct": true
+    },
+    {
+      "kind": "rephrased",
+      "question": "who is the owner?",
+      "expected": "The shop is owned by Ammad Aslam.",
+      "reply": "I was developed by Ammad Aslam, with AI-assisted tooling.",
+      "correct": false
+    }
+  ],
+  "summary": {
+    "status": "completed",
+    "steps": 200,
+    "tokens_seen": 819200,
+    "params": 13239168,
+    "trainable_params": 13239168,
+    "first_train_loss": 2.0006,
+    "last_train_loss": 0.0044,
+    "final_val_loss": 0.0011620557634159923,
+    "best_val_loss": 0.0011620557634159923,
+    "peak_rss_mb": 2259.2,
+    "estimated_memory_mb": 2938.6,
+    "optimizer_state_mb": 101.01,
+    "elapsed_s": 200.8,
+    "mean_tokens_per_sec": 4116.3,
+    "mode": "sft_full"
+  }
+}

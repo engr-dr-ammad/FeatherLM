@@ -49,10 +49,24 @@ class InferenceEngine:
         ids = self.tok.encode(prompt)
         return ids if ids else [self.tok.bos_id]
 
-    def encode_chat(self, messages: list[dict]) -> list[int]:
+    def encode_chat(self, messages: list[dict], reserve: int = 64) -> list[int]:
+        """Format a conversation for the chat template, keeping only the most recent turns that fit.
+
+        Small models are trained on short conversations within max_seq_len tokens; feeding them a
+        long history makes them drift (e.g. continue an earlier answer). System messages are kept;
+        the oldest user/assistant turns are dropped until prompt + `reserve` new tokens fit.
+        """
         if not self.supports_chat:
             raise ValueError("this model has no chat template; use the completions endpoint")
-        ids, _ = format_chat(messages, self.tok, add_generation_prompt=True)
+        budget = max(32, self.model.cfg.max_seq_len - reserve)
+        system = [m for m in messages if m.get("role") == "system"]
+        turns = [m for m in messages if m.get("role") != "system"]
+        ids, _ = format_chat(system + turns, self.tok, add_generation_prompt=True)
+        while len(ids) > budget and len(turns) > 1:
+            turns = turns[1:]
+            while len(turns) > 1 and turns[0].get("role") != "user":  # start at a user turn
+                turns = turns[1:]
+            ids, _ = format_chat(system + turns, self.tok, add_generation_prompt=True)
         return ids
 
     def stream(self, prompt_ids: list[int], params: SamplingParams, cancel: threading.Event | None = None,

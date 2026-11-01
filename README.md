@@ -72,17 +72,36 @@ python -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 | ONNX export | `python -m featherlm.export.onnx_export --model runs/featherlm-nano/final --out models/featherlm-nano-onnx` |
 | Validate exports | `python -m featherlm.export.validate --reference runs/featherlm-nano/final --candidates models/featherlm-nano-int8 --onnx models/featherlm-nano-onnx --data data/shakespeare` |
 | All benchmarks | `./scripts/run_benchmarks.sh` |
-| Tests (91, CPU only) | `python -m pytest` |
+| Tests (CPU only) | `python -m pytest` |
 | Docker (local) | `docker compose up -d --build` |
 | Docker (production, inference only) | `docker compose -f docker-compose.prod.yml up -d` |
 | Cloud VM deploy | `./scripts/deploy.sh runs/featherlm-nano/final` (see `docs/deployment.md`) |
 | Frontend dev server | `cd frontend && npm run dev` |
 
+### A chatbot you can teach
+
+FeatherLM includes a small starter chatbot, and anyone can teach it their own answers in
+Studio's **Teach** tab: add questions (2-3 phrasings each) with the answer you want, click
+**Train my chatbot** (about 3 minutes on 2 CPU cores), and chat with the result. Under any
+reply, **Teach a better answer** saves a correction for the next round.
+
+```bash
+./scripts/make_chatbot.sh          # builds runs/featherlm-nano-chat (pretrain if needed + chat fine-tune)
+python -m uvicorn api.main:app --port 8000    # then open the Teach tab
+```
+
+Measured: taught questions are answered correctly 100% of the time; unseen rephrasings
+50% with 3 taught phrasings (17% with 1); starter knowledge is mostly kept (67% → 62% on
+its held-out set). It is a 13M-parameter model: it knows what it is taught, says "I don't
+know that yet" otherwise, and is not a general assistant. Details: [docs/chatbot.md](docs/chatbot.md).
+
+![Teach tab](docs/images/studio-teach.png)
+
 ### FeatherLM Studio
 
-Five sections: Chat (streaming, generation settings, TTFT and tok/s, stop, clear), Model
+Six sections: Chat (streaming, generation settings, TTFT and tok/s, stop, clear), Model
 Manager (architecture, parameters, size, quantization, context, memory estimate, checkpoint
-import), Training (start/stop/resume background jobs with live loss, RAM, CPU and checkpoint
+import), Teach (datasets of questions and answers, upload, one-click chat training), Training (start/stop/resume background jobs with live loss, RAM, CPU and checkpoint
 status), Benchmarks (charts from `results/`) and Settings.
 
 ![Training dashboard](docs/images/studio-training.png)
@@ -160,8 +179,9 @@ Measured on a 2-vCPU Xeon with 7.8 GB RAM, no GPU. Details: `docs/benchmarks.md`
 * **Evidence.** The architecture comparison is small-scale (4M-13M parameters, one dataset,
   a few hundred steps, three seeds). It does not show that the Feather core is better than a
   Transformer in general; see `docs/research.md`.
-* **No instruction following.** No instruction-tuned model is shipped; `/v1/chat/completions`
-  is disabled for the base model by design.
+* **Small chatbot.** The starter chatbot and taught models answer what they were taught
+  (67% on held-out rephrasings of starter topics); they are not general assistants. The base
+  model has no chat template, so `/v1/chat/completions` rejects it by design.
 * **Speed.** The recurrence and per-token decode loop are plain PyTorch; there are no custom
   CPU kernels yet.
 * **ONNX** export is fixed-window (O(window) work per token); llama.cpp/GGUF is not supported

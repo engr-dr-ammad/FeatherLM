@@ -14,6 +14,7 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [p, setP] = useState({ max_tokens: 200, temperature: 0.8, top_p: 0.95, top_k: 50, repetition_penalty: 1.1, seed: "", stop: "" });
+  const [remember, setRemember] = useState(storeGet("featherlm.remember") === "1");
   const [teachIdx, setTeachIdx] = useState<number | null>(null);
   const [draft, setDraft] = useState("");
   const [teachDs, setTeachDs] = useState(storeGet(KEY_DS) || "my-chatbot");
@@ -26,7 +27,8 @@ export default function Chat() {
       const ms = r.data.map((d) => d.featherlm);
       setModels(ms);
       const wanted = storeGet(KEY_MODEL);
-      const pref = ms.find((m) => m.id === wanted) ?? ms.find((m) => m.capabilities.chat && m.id.endsWith("/best"))
+      const pref = ms.find((m) => m.id === wanted) ?? ms.find((m) => m.id === "runs/featherlm-nano-chat/best")
+        ?? ms.find((m) => m.capabilities.chat && m.id.endsWith("/best"))
         ?? ms.find((m) => m.id.endsWith("/best")) ?? ms.find((m) => m.id.endsWith("/final")) ?? ms[0];
       if (pref) pickModel(pref.id, ms);
     }).catch(() => setModels([]));
@@ -42,14 +44,14 @@ export default function Chat() {
     setModel(id);
     storeSet(KEY_MODEL, id);
     const isChat = !!list.find((m) => m.id === id)?.capabilities.chat;
-    setP((old) => ({ ...old, temperature: isChat ? 0.2 : 0.8, max_tokens: isChat ? 120 : 200, repetition_penalty: isChat ? 1.0 : 1.1 }));
+    setP((old) => ({ ...old, temperature: isChat ? 0 : 0.8, max_tokens: isChat ? 120 : 200, repetition_penalty: isChat ? 1.0 : 1.1 }));
     setMsgs([]);
   }
 
   async function saveTeach(i: number) {
     const answer = draft.trim();
     if (!answer) return;
-    const prior = msgs.slice(0, i).filter((m) => !m.error);
+    const prior = remember ? msgs.slice(0, i).filter((m) => !m.error) : msgs.slice(i - 1, i);
     const messages = chatMode
       ? [...prior.map(({ role, content }) => ({ role, content })), { role: "assistant", content: answer }]
       : [{ role: "user", content: msgs[i - 1]?.content ?? "" }, { role: "assistant", content: answer }];
@@ -77,8 +79,10 @@ export default function Chat() {
       repetition_penalty: p.repetition_penalty, seed: p.seed === "" ? undefined : Number(p.seed),
       stop: p.stop ? p.stop.split("|").filter(Boolean) : undefined,
     };
+    // Small models answer best one question at a time; history is optional.
+    const turns = remember ? history.filter((m) => !m.error) : history.slice(-1);
     const body = chatMode
-      ? { ...params, messages: history.filter((m) => !m.error).map(({ role, content }) => ({ role, content })) }
+      ? { ...params, messages: turns.map(({ role, content }) => ({ role, content })) }
       : { ...params, prompt: text };
     const path = chatMode ? "/v1/chat/completions" : "/v1/completions";
     const update = (fn: (m: Msg) => Msg) => setMsgs((ms) => [...ms.slice(0, -1), fn(ms[ms.length - 1])]);
@@ -113,6 +117,12 @@ export default function Chat() {
           <span className={`pill ${chatMode ? "bg-amber-100 text-amber-800" : "bg-stone-100 text-stone-600"}`}>
             {chatMode ? "chat template" : "completion mode"}
           </span>
+          {chatMode && (
+            <label className="flex items-center gap-1.5 text-xs font-normal text-stone-600" title="FeatherLM is small and answers best one question at a time">
+              <input type="checkbox" checked={remember} onChange={(e) => { setRemember(e.target.checked); storeSet("featherlm.remember", e.target.checked ? "1" : "0"); }} />
+              Remember earlier messages
+            </label>
+          )}
           <button className="btn-ghost" onClick={() => setMsgs([])} disabled={busy}>Clear</button>
         </div>
         {!chatMode && info && (
@@ -123,7 +133,7 @@ export default function Chat() {
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
           {msgs.length === 0 && (
             <p className="mt-20 text-center text-sm text-stone-400">
-              {chatMode ? "Say hi, or ask what FeatherLM is, how to install it, or how to teach it." : "Enter a prompt to start generating."}
+              {chatMode ? "Say hi, or ask what FeatherLM is, how to install it, or how to teach it. Temperature 0 gives the same, most likely answer every time." : "Enter a prompt to start generating."}
             </p>
           )}
           {msgs.map((m, i) => (

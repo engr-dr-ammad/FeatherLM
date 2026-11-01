@@ -50,6 +50,8 @@ def main() -> int:
     ap.add_argument("--seed", type=int)
     ap.add_argument("--threads", type=int, default=0)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+    ap.add_argument("--history", action="store_true",
+                    help="chat: send earlier turns too (small models answer best one question at a time)")
     args = ap.parse_args()
     if not args.chat and args.prompt is None:
         ap.error("--prompt is required unless --chat is given")
@@ -85,7 +87,7 @@ def main() -> int:
             continue
         if engine.supports_chat:
             history.append({"role": "user", "content": line})
-            ids = engine.encode_chat(history)
+            ids = engine.encode_chat(history if args.history else history[-1:])
             pieces = []
             stats = GenerationStats()
             for p in engine.stream(ids, params, stats=stats):

@@ -101,3 +101,29 @@ def test_vocab_limit_masks_undecodable_ids():
         m.embed.table.weight[250:] += 5.0  # make padded rows attractive
     out = list(generate_ids(m, [5], SamplingParams(max_new_tokens=30, temperature=1.0, seed=0), vocab_limit=250))
     assert max(out) < 250
+
+
+def test_encode_chat_keeps_recent_turns_within_context(trained_model):
+    from featherlm.training.checkpoint import load_model, save_model
+
+    run, _ = trained_model
+    m, tok, _ = load_model(run / "final")
+    m.cfg.chat_template = "featherlm-v1"
+    import tempfile
+    from pathlib import Path
+
+    d = Path(tempfile.mkdtemp()) / "chat"
+    save_model(d, m, tok)
+    eng = InferenceEngine(d)
+    long_turns = []
+    for i in range(30):
+        long_turns += [{"role": "user", "content": f"question number {i} about cats and dogs"},
+                       {"role": "assistant", "content": f"answer number {i} about cats and dogs at the river"}]
+    msgs = [{"role": "system", "content": "be brief"}] + long_turns + [{"role": "user", "content": "last question"}]
+    ids = eng.encode_chat(msgs, reserve=16)
+    assert len(ids) <= m.cfg.max_seq_len - 16
+    text = eng.tok.decode(ids, skip_special=False)
+    assert "be brief" in text and "last question" in text and "question number 0 " not in text
+    assert text.endswith("<|assistant|>")
+    short = eng.encode_chat([{"role": "user", "content": "hi"}])
+    assert eng.tok.decode(short, skip_special=False).endswith("<|user|>hi<|end|><|assistant|>")

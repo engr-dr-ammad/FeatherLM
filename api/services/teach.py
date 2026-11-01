@@ -237,10 +237,12 @@ class TeachService:
         (data_dir / "train.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in train))
         (data_dir / "val.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in val))
         steps = int(steps)
+        base_cfg = json.loads((Path(base_dir) / "config.json").read_text())
+        seq_len = min(256, int(base_cfg.get("max_seq_len", 256)))  # never longer than the base model's context
         cfg = {
             "model": {"name": run},
             "data": {"path": str(data_dir), "format": "jsonl", "train_file": str(data_dir / "train.jsonl"),
-                     "val_file": str(data_dir / "val.jsonl"), "seq_len": 256},
+                     "val_file": str(data_dir / "val.jsonl"), "seq_len": seq_len},
             "training": {"seed": seed, "batch_size": 16, "grad_accum": 1, "max_steps": steps,
                          "lr": 3.0e-4 if mode == "full" else 2.0e-3, "warmup_steps": min(20, steps // 5),
                          "min_lr_ratio": 0.1, "weight_decay": 0.0, "eval_interval": max(10, steps // 4),

@@ -117,3 +117,13 @@ def test_teach_train_end_to_end(client):
     assert report["val_loss_after"] < report["val_loss_before"]
     m, _, _ = load_model(client.app.state.settings.runs_dir / "e2e-run" / "best")
     assert m.cfg.chat_template == "featherlm-v1"
+
+
+def test_several_phrasings_one_answer(client):
+    r = client.post("/teach/datasets/multi/examples",
+                    json={"questions": ["When do you open?", "Opening hours?", "When do you open?", " "],
+                          "answer": "9 to 5."})
+    assert r.status_code == 201 and r.json()["added"] == 2  # duplicates and blanks removed
+    rows = client.get("/teach/datasets/multi/examples").json()["examples"]
+    assert {r["messages"][0]["content"] for r in rows} == {"When do you open?", "Opening hours?"}
+    assert client.post("/teach/datasets/multi/examples", json={"questions": [" "], "answer": "x"}).status_code == 422

@@ -1,53 +1,53 @@
 {
   "model": "runs/featherlm-nano-chat/best",
-  "accuracy": 0.5238,
-  "correct": 22,
+  "accuracy": 0.6667,
+  "correct": 28,
   "total": 42,
   "per_intent": {
     "benefits": "0/2",
     "bye": "1/2",
     "creator": "0/2",
     "gpu": "1/2",
-    "greet": "1/2",
+    "greet": "2/2",
     "how_are_you": "1/2",
     "identity": "0/2",
     "install": "2/2",
     "joke": "2/2",
     "license": "1/2",
     "limits": "2/2",
-    "math": "0/4",
+    "math": "4/4",
     "memory": "0/2",
     "privacy": "2/2",
     "shakespeare": "2/2",
     "teach": "2/2",
-    "thanks": "2/2",
-    "train": "1/2",
-    "unknown": "1/2",
+    "thanks": "1/2",
+    "train": "2/2",
+    "unknown": "2/2",
     "what_is": "1/2"
   },
   "examples": [
     {
       "intent": "greet",
       "question": "howdy",
-      "reply": "Yes, FeatherLM is free and open source under the MIT license.",
-      "correct": false
+      "reply": "Hello! I'm FeatherLM, a small language model. How can I help you today?",
+      "correct": true
     },
     {
       "intent": "greet",
       "question": "Hi featherlm",
-      "reply": "Hi there! I'm FeatherLM. What would you like to know?",
+      "reply": "Hello! I'm FeatherLM, a small language model. How can I help you today?",
       "correct": true
     },
     {
       "intent": "how_are_you",
       "question": "what's up?",
-      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
+      "reply": "I'm FeatherLM, a small open-source language model with about 13 million parameters. I was developed by Ammad Aslam, and I can be trained and run on an ordinary CPU.",
       "correct": false
     },
     {
       "intent": "how_are_you",
       "question": "How have you been?",
-      "reply": "I'm doing well, thanks for asking! How can I help you?",
+      "reply": "All good here, thank you! What can I do for you?",
       "correct": true
     },
     {
@@ -131,8 +131,8 @@
     {
       "intent": "train",
       "question": "please, how do i train it on my data",
-      "reply": "Clone it from GitHub with git clone https://github.com/engr-dr-ammad/FeatherLM, then run ./scripts/setup.sh. On Windows, run scripts\\setup.ps1 instead.",
-      "correct": false
+      "reply": "First prepare data with python -m featherlm.data.prepare, then run python train.py --config configs/nano_cpu.yaml. The Nano model trains in about 40 minutes on 2 CPU cores.",
+      "correct": true
     },
     {
       "intent": "teach",
@@ -149,13 +149,13 @@
     {
       "intent": "limits",
       "question": "Are you as good as gpt?",
-      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
+      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
       "correct": true
     },
     {
       "intent": "limits",
       "question": "can you replace chatgpt?",
-      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM, simple maths and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
+      "reply": "I'm a small research model, so I only know what I've been taught: things about FeatherLM and a bit of Shakespeare. I'm not a general assistant like the big chatbots, but you can teach me more in the Teach tab.",
       "correct": true
     },
     {
@@ -167,7 +167,7 @@
     {
       "intent": "memory",
       "question": "how heavy are you",
-      "reply": "I'm doing well, thanks for asking! How can I help you?",
+      "reply": "All good here, thank you! What can I do for you?",
       "correct": false
     },
     {
@@ -197,14 +197,14 @@
     {
       "intent": "thanks",
       "question": "Awesome thank you",
-      "reply": "Happy to help!",
+      "reply": "You're welcome! Anything else I can help with?",
       "correct": true
     },
     {
       "intent": "thanks",
       "question": "ty",
-      "reply": "Happy to help!",
-      "correct": true
+      "reply": "Hello! I'm FeatherLM, a small language model. How can I help you today?",
+      "correct": false
     },
     {
       "intent": "bye",
@@ -215,26 +215,26 @@
     {
       "intent": "bye",
       "question": "FeatherLM, Farewell",
-      "reply": "Happy to help!",
+      "reply": "Hello! I'm FeatherLM, a small language model. How can I help you today?",
       "correct": false
     },
     {
       "intent": "joke",
       "question": "i need a joke",
-      "reply": "Why don't small models get lost? They always follow the next token.",
+      "reply": "I tried to train on a GPU, but I was told I'm too light for heavy lifting. I'm a feather after all!",
       "correct": true
     },
     {
       "intent": "joke",
       "question": "please, joke please",
-      "reply": "Why don't small models get lost? They always follow the next token.",
+      "reply": "I tried to train on a GPU, but I was told I'm too light for heavy lifting. I'm a feather after all!",
       "correct": true
     },
     {
       "intent": "unknown",
       "question": "Explain black holes.",
-      "reply": "FeatherLM trains on a normal CPU with no GPU, runs fully offline so your data stays private, keeps its memory flat on long texts, and the 8-bit version is 4 times smaller with the same quality. It is free and open source.",
-      "correct": false
+      "reply": "I'm a small model and I don't know that yet. You can teach me new answers in the Teach tab of FeatherLM Studio!",
+      "correct": true
     },
     {
       "intent": "unknown",
@@ -245,38 +245,38 @@
     {
       "intent": "shakespeare",
       "question": "share a shakespeare line?",
-      "reply": "Here is a line from Shakespeare: \"And from her service is free and open source.\"",
+      "reply": "Here is a line from Shakespeare: \"And if you be a better answer to me?",
       "correct": true
     },
     {
       "intent": "shakespeare",
       "question": "i want a shakespeare quote?",
-      "reply": "Here is a line from Shakespeare: \"And from her service is free and open source.\"",
+      "reply": "Here is a line from Shakespeare: \"And if you be a better answer to me?",
       "correct": true
     },
     {
       "intent": "math",
-      "question": "What is 7 plus 5?",
-      "reply": "7 plus 5 is 17.",
-      "correct": false
+      "question": "How much is 7 plus 5?",
+      "reply": "I'm not reliable at maths yet, so please use a calculator for that. You can teach me specific answers in the Teach tab.",
+      "correct": true
     },
     {
       "intent": "math",
-      "question": "What is 9 plus 9?",
-      "reply": "9 plus 9 is 15.",
-      "correct": false
+      "question": "How much is 13 plus 4?",
+      "reply": "I'm not reliable at maths yet, so please use a calculator for that. You can teach me specific answers in the Teach tab.",
+      "correct": true
     },
     {
       "intent": "math",
-      "question": "What is 13 minus 4?",
-      "reply": "13 minus 4 is 10.",
-      "correct": false
+      "question": "How much is 21 plus 9?",
+      "reply": "I'm not reliable at maths yet, so please use a calculator for that. You can teach me specific answers in the Teach tab.",
+      "correct": true
     },
     {
       "intent": "math",
-      "question": "What is 18 minus 6?",
-      "reply": "18 minus 6 is 10.",
-      "correct": false
+      "question": "How much is 64 plus 8?",
+      "reply": "I'm not reliable at maths yet, so please use a calculator for that. You can teach me specific answers in the Teach tab.",
+      "correct": true
     }
   ]
 }

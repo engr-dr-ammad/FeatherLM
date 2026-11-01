@@ -115,7 +115,7 @@ async def chat_completions(req: ChatCompletionRequest, request: Request):
     if not engine.supports_chat:
         raise HTTPException(400, f"model '{model_id}' has no chat template (it is a plain language model); "
                                  "use /v1/completions or an instruction-tuned checkpoint")
-    ids = engine.encode_chat([m.model_dump() for m in req.messages])
+    ids = engine.encode_chat([m.model_dump() for m in req.messages], reserve=min(req.max_tokens, 128))
     params = _params(req, request.app.state.settings)
     fn, stats, rid, created, obj = _run(request, engine, ids, params, True, model_id, req.stream)
     if req.stream:

@@ -22,6 +22,7 @@ class DatasetCreate(BaseModel):
 class ExampleIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     question: str | None = Field(None, max_length=2000)
+    questions: list[str] | None = Field(None, max_length=20, description="several phrasings for the same answer")
     answer: str | None = Field(None, max_length=2000)
     messages: list[ChatMessage] | None = Field(None, max_length=64)
 
@@ -69,16 +70,21 @@ async def list_examples(name: str, request: Request, limit: int = 500):
 
 @router.post("/datasets/{name}/examples", status_code=201)
 async def add_example(name: str, body: ExampleIn, request: Request):
+    """Add one example: {question, answer}, {questions: [...], answer} (one example per phrasing) or {messages}."""
     if body.messages:
-        conv = [m.model_dump() for m in body.messages]
-    elif body.question and body.answer:
-        conv = [{"role": "user", "content": body.question}, {"role": "assistant", "content": body.answer}]
+        convs = [[m.model_dump() for m in body.messages]]
+    elif body.answer and (body.question or body.questions):
+        qs = [q.strip() for q in ([body.question] if body.question else []) + (body.questions or []) if q and q.strip()]
+        if not qs or any(len(q) > 2000 for q in qs):
+            raise HTTPException(422, "questions must be 1-2000 characters")
+        convs = [[{"role": "user", "content": q}, {"role": "assistant", "content": body.answer}]
+                 for q in dict.fromkeys(qs)]
     else:
-        raise HTTPException(422, "give question and answer, or messages")
+        raise HTTPException(422, "give question(s) and answer, or messages")
     teach = request.app.state.teach
     await run_in_threadpool(_call, teach.ensure, name)
-    added = await run_in_threadpool(_call, teach.add, name, [conv])
-    return added[0]
+    added = await run_in_threadpool(_call, teach.add, name, convs)
+    return {**added[0], "added": len(added)}
 
 
 @router.delete("/datasets/{name}/examples/{ex_id}")
